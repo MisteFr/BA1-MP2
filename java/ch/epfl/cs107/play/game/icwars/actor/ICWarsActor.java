@@ -12,16 +12,14 @@ public abstract class ICWarsActor extends MovableAreaEntity {
     private ICWarsFactionType faction;
 
     public enum ICWarsFactionType{
-        NONE(0, "none"),
-        ALLY(1, "friendly"),
-        ENEMY(2, "enemy"),;
+        NONE(0),
+        ALLY(1),
+        ENEMY(2),;
 
         final int type;
-        final String name;
 
-        ICWarsFactionType(int type, String name){
+        ICWarsFactionType(int type){
             this.type = type;
-            this.name = name;
         }
 
         public static ICWarsActor.ICWarsFactionType toType(int type){
@@ -31,10 +29,6 @@ public abstract class ICWarsActor extends MovableAreaEntity {
                 }
             }
             return NONE;
-        }
-
-        public String getName(){
-            return this.name;
         }
     }
 

@@ -1,8 +1,11 @@
 package ch.epfl.cs107.play.game.icwars.area;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.io.FileSystem;
+import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
 import java.util.LinkedList;
@@ -17,6 +20,8 @@ public abstract class ICWarsArea extends Area {
 
     protected abstract void createArea();
 
+    public abstract DiscreteCoordinates getDefaultCursorPosition();
+
     @Override
     public boolean begin(Window window, FileSystem fileSystem){
         if(super.begin(window, fileSystem)) {
@@ -26,21 +31,5 @@ public abstract class ICWarsArea extends Area {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Register an unit : will be added at next update
-     * @param unit (Unit): the unit to register, not null
-     */
-    public void registerUnit(Unit unit){
-        unitsList.add(unit);
-    }
-
-    /**
-     * Unregister an unit : will be removed at next update
-     * @param unit (Unit): the unit to unregister, not null
-     */
-    public void unregisterUnit(Unit unit){
-        unitsList.remove(unit);
     }
 }

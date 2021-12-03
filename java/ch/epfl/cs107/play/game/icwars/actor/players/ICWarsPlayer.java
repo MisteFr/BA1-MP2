@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public abstract class ICWarsPlayer extends ICWarsActor {
 
-    private ArrayList<Unit> unitsList = new ArrayList<Unit>();
+    protected ArrayList<Unit> unitsList = new ArrayList<Unit>();
 
     ICWarsPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units){
         super(owner, coordinates, factionType);

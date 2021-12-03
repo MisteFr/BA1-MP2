@@ -6,6 +6,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
+import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
@@ -16,11 +17,18 @@ import java.util.List;
 public class RealPlayer extends ICWarsPlayer {
     private Sprite sprite;
     private final static int MOVE_DURATION = 8;
+    private ICWarsPlayerGUI gui;
+    protected Unit selectedUnit;
 
     public RealPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
         super(owner, coordinates, factionType, units);
-        sprite = new Sprite("icwars/allyCursor", 1.f, 1.f,this);
-        //TODO: fix
+        if(factionType == ICWarsFactionType.ALLY){
+            sprite = new Sprite("icwars/allyCursor", 1.f, 1.f,this);
+        }else if (factionType == ICWarsFactionType.ENEMY){
+            sprite = new Sprite("icwars/enemyCursor", 1.f, 1.f,this);
+        }
+
+        gui = new ICWarsPlayerGUI(10f, this);
     }
 
     /**
@@ -66,21 +74,26 @@ public class RealPlayer extends ICWarsPlayer {
     }
 
     /**
-     *
      * @param area (Area): initial area, not null
-     * @param position (DiscreteCoordinates): initial position, not null
      */
-    public void enterArea(Area area, DiscreteCoordinates position){
+    public void enterArea(Area area){
         area.registerActor(this);
         area.setViewCandidate(this);
         setOwnerArea(area);
-        setCurrentPosition(position.toVector());
         resetMotion();
+    }
+
+    public void selectUnit(int position){
+        if(position < unitsList.size()){
+            this.selectedUnit = unitsList.get(position);
+            gui.setSelectedUnit(this.selectedUnit);
+        }
     }
 
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);
+        gui.draw(canvas);
     }
 
     @Override
