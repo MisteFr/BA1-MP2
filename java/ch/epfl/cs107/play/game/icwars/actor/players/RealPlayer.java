@@ -18,7 +18,6 @@ public class RealPlayer extends ICWarsPlayer {
     private Sprite sprite;
     private final static int MOVE_DURATION = 8;
     private ICWarsPlayerGUI gui;
-    protected Unit selectedUnit;
 
     public RealPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
         super(owner, coordinates, factionType, units);
@@ -50,30 +49,33 @@ public class RealPlayer extends ICWarsPlayer {
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
         switch(currentState){
-            //todo : check if it is indeed the way it was supposed to be coded
-            //todo : where should we put the breaks ?
-            case IDLE :
             case NORMAL:
                 if (keyboard.get(Keyboard.ENTER).isDown()){
                     currentState = PlayState.SELECT_CELL;
                 } else if (keyboard.get(Keyboard.TAB).isDown()){
                     currentState = PlayState.IDLE;
                 }
+                break;
             case SELECT_CELL:
                 if (selectedUnit != null){
                     currentState = PlayState.MOVE_UNIT;
                 }
+                break;
             case MOVE_UNIT:
                 if (keyboard.get(Keyboard.ENTER).isDown()){
                     //todo move the unit and mark as used
+                    //this.selectedUnit.move();
+
                     currentState = PlayState.NORMAL;
                 }
+                break;
             case ACTION:
+                //todo: write some code here later
+                break;
             case ACTION_SELECTION:
+                //todo: write some code here later
+                break;
         }
-
-        super.update(deltaTime);
-
     }
     /**
      * Orientate and Move this player in the given orientation if the given button is down

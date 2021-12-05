@@ -9,14 +9,13 @@ import java.util.ArrayList;
 
 public abstract class ICWarsPlayer extends ICWarsActor {
     protected PlayState currentState;
-    protected Unit selectedUnit;
+    protected Unit selectedUnit = null;
     protected ArrayList<Unit> unitsList = new ArrayList<Unit>();
 
 
     ICWarsPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units){
         super(owner, coordinates, factionType);
         currentState = PlayState.IDLE;
-        selectedUnit = null;
 
         for(Unit unit : units){
             unitsList.add(unit);
@@ -71,6 +70,9 @@ public abstract class ICWarsPlayer extends ICWarsActor {
         return false;
     }
 
+    /**
+     * Called when player turn starts
+     */
     public void startTurn(){
         currentState = PlayState.NORMAL;
         this.centerCamera();
