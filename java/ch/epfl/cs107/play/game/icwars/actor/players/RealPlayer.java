@@ -40,16 +40,16 @@ public class RealPlayer extends ICWarsPlayer {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
         Keyboard keyboard= getOwnerArea().getKeyboard();
-
-        moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
-        moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
-        moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
-        moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
         switch(currentState){
             case NORMAL:
+
+                moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
+                moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
+                moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
+                moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
+
                 if (keyboard.get(Keyboard.ENTER).isDown()){
                     currentState = PlayState.SELECT_CELL;
                 } else if (keyboard.get(Keyboard.TAB).isDown()){
@@ -57,11 +57,23 @@ public class RealPlayer extends ICWarsPlayer {
                 }
                 break;
             case SELECT_CELL:
+
+                moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
+                moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
+                moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
+                moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
+
                 if (selectedUnit != null){
                     currentState = PlayState.MOVE_UNIT;
                 }
                 break;
             case MOVE_UNIT:
+
+                moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
+                moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
+                moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
+                moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
+
                 if (keyboard.get(Keyboard.ENTER).isDown()){
                     //todo move the unit and mark as used
                     //this.selectedUnit.move();

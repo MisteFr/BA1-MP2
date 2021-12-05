@@ -4,8 +4,10 @@ import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.game.icwars.area.ICWarsRange;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ICWarsPlayer extends ICWarsActor {
     protected PlayState currentState;
@@ -75,9 +77,32 @@ public abstract class ICWarsPlayer extends ICWarsActor {
      */
     public void startTurn(){
         currentState = PlayState.NORMAL;
+        for (Unit unit : unitsList){
+            unit.setAvailable(true);
+        }
         this.centerCamera();
-        //todo : units become available
+    }
 
+    @Override
+    public void onLeaving(List<DiscreteCoordinates> coordinates) {
+        super.onLeaving(coordinates);
+        if (currentState == PlayState.SELECT_CELL){
+            this.currentState = PlayState.NORMAL;
+        }
+    }
+
+    @Override
+    public boolean changePosition(DiscreteCoordinates newPosition) {
+        if (!super.changePosition(newPosition) || false){ //todo : change false to check if a node exists in action range
+            return false;
+        }
+
+        //todo : does it work if we just copy this from the superclass ?
+        getOwnerArea().leaveAreaCells(this, getCurrentCells());
+        setCurrentPosition(newPosition.toVector());
+        getOwnerArea().enterAreaCells(this, getCurrentCells());
+
+        return true;
     }
 
     /**
@@ -85,5 +110,9 @@ public abstract class ICWarsPlayer extends ICWarsActor {
      */
     public void centerCamera() {
         getOwnerArea().setViewCandidate(this);
+    }
+
+    public PlayState getCurrentState(){
+        return currentState;
     }
 }

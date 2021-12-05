@@ -66,7 +66,7 @@ public class ICWars extends AreaGame {
             createAreas();
             areaIndex = 0;
             initArea(areas[areaIndex]);
-
+            player.startTurn();
             return true;
                     }
         return false;

@@ -18,7 +18,7 @@ public class ICWarsPlayerGUI implements Graphics {
 
     @Override
     public void draw(Canvas canvas) {
-        if(selectedUnit != null){
+        if(selectedUnit != null && player.getCurrentState() == ICWarsPlayer.PlayState.MOVE_UNIT){
             selectedUnit.drawRangeAndPathTo(new DiscreteCoordinates(Math.round(player.getPosition().x), Math.round(player.getPosition().y)), canvas);
         }
     }

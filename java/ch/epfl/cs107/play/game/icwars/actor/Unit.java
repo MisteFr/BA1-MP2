@@ -14,6 +14,7 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Queue;
 
 public abstract class Unit extends ICWarsActor {
+    protected boolean isAvailable;
     protected boolean isAlive;
     protected int hp;
     private Sprite sprite;
@@ -21,6 +22,7 @@ public abstract class Unit extends ICWarsActor {
 
     public Unit(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, int moveRadius, int dmg, int hp){
         super(owner, coordinates, factionType);
+        isAvailable = true; //todo : is this necessary ?
         isAlive = true;
         if(factionType == ICWarsFactionType.ALLY){
             sprite = new Sprite("icwars/friendly" + getName(), 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
@@ -60,7 +62,14 @@ public abstract class Unit extends ICWarsActor {
     }
 
     /**
-     * @param amount (int): amount to add to health points
+     * @param available (boolean): availability state to set to
+     */
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
+    /**
+     * @param amount (int): amount of health points to add
      */
     public void heal(int amount){
         if (amount > 0){
