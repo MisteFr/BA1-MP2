@@ -31,6 +31,11 @@ public final class DiscreteCoordinates implements Serializable {
         this.y = y;
     }
 
+    public DiscreteCoordinates(Vector vector){
+        this.x = Math.round(vector.x);
+        this.y = Math.round(vector.y);
+    }
+
     /** @return (DiscreteCoordinates): one coordinate left */
     public DiscreteCoordinates left(){
         return new DiscreteCoordinates(x-1, y);

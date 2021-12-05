@@ -1,6 +1,5 @@
 package ch.epfl.cs107.play.game.icwars.actor;
 
-import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Path;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
@@ -17,12 +16,14 @@ public abstract class Unit extends ICWarsActor {
     protected boolean isAvailable;
     protected boolean isAlive;
     protected int hp;
+    protected int moveRadius;
+
     private Sprite sprite;
     protected ICWarsRange range = new ICWarsRange();
 
-    public Unit(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, int moveRadius, int dmg, int hp){
+    public Unit(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, int mvRadius, int dmg, int hp){
         super(owner, coordinates, factionType);
-        isAvailable = true; //todo : is this necessary ?
+        isAvailable = true;
         isAlive = true;
         if(factionType == ICWarsFactionType.ALLY){
             sprite = new Sprite("icwars/friendly" + getName(), 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
@@ -30,7 +31,8 @@ public abstract class Unit extends ICWarsActor {
             sprite = new Sprite("icwars/enemy" + getName(), 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
         }
 
-        initRange(moveRadius, coordinates);
+        moveRadius = mvRadius;
+        setRange(moveRadius, coordinates);
         owner.registerActor(this);
     }
 
@@ -54,11 +56,7 @@ public abstract class Unit extends ICWarsActor {
      * @param amount (int): new amount of hp to set to
      */
     public void setHp(int amount){
-        if(amount < 0){
-            hp = 0;
-        } else {
-            hp = amount;
-        }
+        hp = Math.max(amount, 0);
     }
 
     /**
@@ -77,6 +75,17 @@ public abstract class Unit extends ICWarsActor {
         }
     }
 
+    @Override
+    public boolean changePosition(DiscreteCoordinates newPosition) {
+        if (!super.changePosition(newPosition) || range.nodeExists(newPosition)){
+            return false;
+        }
+
+        setRange(moveRadius, newPosition);
+
+        return true;
+    }
+
     /**
      * Draw the unit's range and a path from the unit position to
      destination
@@ -92,9 +101,9 @@ public abstract class Unit extends ICWarsActor {
     }
 
     /**
-        Function to initialize the ICWarsRange
+        Function to initialise the node network according to a position and a radius
      */
-    private void initRange(int moveRadius, DiscreteCoordinates coordinates){
+    private void setRange(int moveRadius, DiscreteCoordinates coordinates){
         for(int x = (-moveRadius + coordinates.x); x <= (moveRadius + coordinates.x); x++){
             for(int y = (-moveRadius + coordinates.y); y <= (moveRadius + coordinates.y); y++){
                 if(x >= 0 && y >= 0 && x <= getOwnerArea().getWidth() && y <= getOwnerArea().getHeight()){

@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.icwars.actor.players;
 
+import ch.epfl.cs107.play.Play;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
@@ -17,7 +18,7 @@ public abstract class ICWarsPlayer extends ICWarsActor {
 
     ICWarsPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units){
         super(owner, coordinates, factionType);
-        currentState = PlayState.IDLE;
+        setCurrentState(PlayState.IDLE);
 
         for(Unit unit : units){
             unitsList.add(unit);
@@ -76,33 +77,19 @@ public abstract class ICWarsPlayer extends ICWarsActor {
      * Called when player turn starts
      */
     public void startTurn(){
-        currentState = PlayState.NORMAL;
+        setCurrentState(PlayState.NORMAL);
         for (Unit unit : unitsList){
             unit.setAvailable(true);
         }
-        this.centerCamera();
+        centerCamera();
     }
 
     @Override
     public void onLeaving(List<DiscreteCoordinates> coordinates) {
         super.onLeaving(coordinates);
-        if (currentState == PlayState.SELECT_CELL){
-            this.currentState = PlayState.NORMAL;
+        if (getCurrentState() == PlayState.SELECT_CELL){
+            setCurrentState(PlayState.NORMAL);
         }
-    }
-
-    @Override
-    public boolean changePosition(DiscreteCoordinates newPosition) {
-        if (!super.changePosition(newPosition) || false){ //todo : change false to check if a node exists in action range
-            return false;
-        }
-
-        //todo : does it work if we just copy this from the superclass ?
-        getOwnerArea().leaveAreaCells(this, getCurrentCells());
-        setCurrentPosition(newPosition.toVector());
-        getOwnerArea().enterAreaCells(this, getCurrentCells());
-
-        return true;
     }
 
     /**
@@ -112,7 +99,18 @@ public abstract class ICWarsPlayer extends ICWarsActor {
         getOwnerArea().setViewCandidate(this);
     }
 
+    /**
+     * Get the current PlayState of the player
+     */
     public PlayState getCurrentState(){
         return currentState;
+    }
+
+    /**
+     * Set the current PlayState of the player
+     * @param state (PlayState): new state
+     */
+    public void setCurrentState(PlayState state){
+        currentState = state;
     }
 }

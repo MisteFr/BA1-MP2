@@ -42,7 +42,7 @@ public class RealPlayer extends ICWarsPlayer {
         super.update(deltaTime);
         Keyboard keyboard= getOwnerArea().getKeyboard();
 
-        switch(currentState){
+        switch(getCurrentState()){
             case NORMAL:
 
                 moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
@@ -51,9 +51,9 @@ public class RealPlayer extends ICWarsPlayer {
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
                 if (keyboard.get(Keyboard.ENTER).isDown()){
-                    currentState = PlayState.SELECT_CELL;
+                    setCurrentState(PlayState.SELECT_CELL);
                 } else if (keyboard.get(Keyboard.TAB).isDown()){
-                    currentState = PlayState.IDLE;
+                    setCurrentState(PlayState.IDLE);
                 }
                 break;
             case SELECT_CELL:
@@ -64,7 +64,7 @@ public class RealPlayer extends ICWarsPlayer {
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
                 if (selectedUnit != null){
-                    currentState = PlayState.MOVE_UNIT;
+                    setCurrentState(PlayState.MOVE_UNIT);
                 }
                 break;
             case MOVE_UNIT:
@@ -75,10 +75,10 @@ public class RealPlayer extends ICWarsPlayer {
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
                 if (keyboard.get(Keyboard.ENTER).isDown()){
-                    //todo move the unit and mark as used
-                    //this.selectedUnit.move();
+                    this.selectedUnit.changePosition(new DiscreteCoordinates(getPosition()));
+                    this.selectedUnit.setAvailable(false);
 
-                    currentState = PlayState.NORMAL;
+                    setCurrentState(PlayState.NORMAL);
                 }
                 break;
             case ACTION:

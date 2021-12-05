@@ -31,7 +31,7 @@ public class ICWars extends AreaGame {
         if(keyboard.get(Keyboard.N).isReleased()){
             if((areaIndex + 1) < areas.length){
                 ++areaIndex;
-                initArea(areas[areaIndex]);
+                initArea(areas[areaIndex], false);
             }else{
                 end();
             }
@@ -42,10 +42,7 @@ public class ICWars extends AreaGame {
                 //allow us to force restart every area
                 setCurrentArea(areaName, true);
             }
-
-            //We switch to level 0 and re init the game in this level0.
-            areaIndex = 0;
-            initArea(areas[areaIndex]);
+            startGame(true);
         }
 
         /* //commented based on the instructions from the assignment
@@ -60,25 +57,36 @@ public class ICWars extends AreaGame {
         addArea(new Level1());
     }
 
+    /**
+     * Set area index to 0 and start the game in area 0.
+     * Start the turn for our real player.
+     * @param restart (boolean): if our intention is to restart the game
+     */
+    private void startGame(boolean restart){
+        areaIndex = 0;
+        initArea(areas[areaIndex], restart);
+        player.startTurn();
+    }
+
     public boolean begin(Window window, FileSystem fileSystem) {
 
         if (super.begin(window, fileSystem)) {
             createAreas();
-            areaIndex = 0;
-            initArea(areas[areaIndex]);
-            player.startTurn();
+            startGame(false);
             return true;
-                    }
+        }
         return false;
     }
 
-    private void initArea(String areaKey) {
+    private void initArea(String areaKey, boolean forceInitPlayer) {
         ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
         DiscreteCoordinates defaultCursorPosition = area.getDefaultCursorPosition();
 
         Tank tank = new Tank(area, new DiscreteCoordinates(2, 5), ICWarsActor.ICWarsFactionType.ALLY);
         Soldat soldat = new Soldat(area, new DiscreteCoordinates(3, 5), ICWarsActor.ICWarsFactionType.ALLY);
-        player = new RealPlayer(area, defaultCursorPosition, ICWarsActor.ICWarsFactionType.ALLY, soldat, tank);
+        if(player == null || forceInitPlayer){
+            player = new RealPlayer(area, defaultCursorPosition, ICWarsActor.ICWarsFactionType.ALLY, soldat, tank);
+        }
         ((RealPlayer)player).enterArea(area);
     }
 
