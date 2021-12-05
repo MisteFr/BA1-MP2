@@ -14,12 +14,14 @@ import ch.epfl.cs107.play.window.Canvas;
 import java.util.Queue;
 
 public abstract class Unit extends ICWarsActor {
+    protected boolean isAlive;
     protected int hp;
     private Sprite sprite;
     protected ICWarsRange range = new ICWarsRange();
 
     public Unit(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, int moveRadius, int dmg, int hp){
         super(owner, coordinates, factionType);
+        isAlive = true;
         if(factionType == ICWarsFactionType.ALLY){
             sprite = new Sprite("icwars/friendly" + getName(), 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
         }else if (factionType == ICWarsFactionType.ENEMY){

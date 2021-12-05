@@ -34,6 +34,9 @@ public class Tank extends Unit {
     public void isDealtDamage(int amount){
         if (amount > 0){
             this.hp -= amount;
+            if (this.hp <= 0) {
+                isAlive = false;
+            }
         }
     }
 
