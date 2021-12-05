@@ -28,7 +28,7 @@ public class ICWars extends AreaGame {
 
         Keyboard keyboard = getCurrentArea().getKeyboard();
 
-        if(keyboard.get(Keyboard.N).isReleased()){
+        if(keyboard.get(Keyboard.N).isDown()){
             if((areaIndex + 1) < areas.length){
                 ++areaIndex;
                 initArea(areas[areaIndex]);
@@ -37,7 +37,7 @@ public class ICWars extends AreaGame {
             }
         }
 
-        if(keyboard.get(Keyboard.R).isReleased()){
+        if(keyboard.get(Keyboard.R).isDown()){
             for(String areaName: areas){
                 //allow us to force restart every area
                 setCurrentArea(areaName, true);
@@ -48,9 +48,12 @@ public class ICWars extends AreaGame {
             initArea(areas[areaIndex]);
         }
 
-        if(keyboard.get(Keyboard.U).isReleased()){
+        /* //commented based on the instructions from the assignment
+        if(keyboard.get(Keyboard.U).isDown()){
             ((RealPlayer)player).selectUnit(1);
+
         }
+         */
     }
 
     private void createAreas(){
@@ -64,8 +67,9 @@ public class ICWars extends AreaGame {
             createAreas();
             areaIndex = 0;
             initArea(areas[areaIndex]);
+
             return true;
-        }
+                    }
         return false;
     }
 

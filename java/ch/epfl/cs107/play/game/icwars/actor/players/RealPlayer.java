@@ -49,6 +49,29 @@ public class RealPlayer extends ICWarsPlayer {
         moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
+        switch(currentState){
+            //todo : check if it is indeed the way it was supposed to be coded
+            //todo : where should we put the breaks ?
+            case IDLE :
+            case NORMAL:
+                if (keyboard.get(Keyboard.ENTER).isDown()){
+                    currentState = PlayState.SELECT_CELL;
+                } else if (keyboard.get(Keyboard.TAB).isDown()){
+                    currentState = PlayState.IDLE;
+                }
+            case SELECT_CELL:
+                if (selectedUnit != null){
+                    currentState = PlayState.MOVE_UNIT;
+                }
+            case MOVE_UNIT:
+                if (keyboard.get(Keyboard.ENTER).isDown()){
+                    //todo move the unit and mark as used
+                    currentState = PlayState.NORMAL;
+                }
+            case ACTION:
+            case ACTION_SELECTION:
+        }
+
         super.update(deltaTime);
 
     }
@@ -65,6 +88,8 @@ public class RealPlayer extends ICWarsPlayer {
             }
         }
     }
+
+
 
     /**
      * Leave an area by unregister this player
@@ -83,12 +108,14 @@ public class RealPlayer extends ICWarsPlayer {
         resetMotion();
     }
 
+    /*
     public void selectUnit(int position){
         if(position < unitsList.size()){
             this.selectedUnit = unitsList.get(position);
             gui.setSelectedUnit(this.selectedUnit);
         }
     }
+     */
 
     @Override
     public void draw(Canvas canvas) {

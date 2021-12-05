@@ -8,17 +8,26 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import java.util.ArrayList;
 
 public abstract class ICWarsPlayer extends ICWarsActor {
-
+    protected PlayState currentState;
+    protected Unit selectedUnit;
     protected ArrayList<Unit> unitsList = new ArrayList<Unit>();
+
 
     ICWarsPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units){
         super(owner, coordinates, factionType);
+        currentState = PlayState.IDLE;
+        selectedUnit = null;
+
         for(Unit unit : units){
             unitsList.add(unit);
         }
         for(Unit unit : unitsList){
             owner.registerActor(unit);
         }
+    }
+
+    public enum PlayState {
+        IDLE, NORMAL, SELECT_CELL, MOVE_UNIT, ACTION_SELECTION, ACTION
     }
 
     @Override
@@ -60,6 +69,13 @@ public abstract class ICWarsPlayer extends ICWarsActor {
         }
 
         return false;
+    }
+
+    public void startTurn(){
+        currentState = PlayState.NORMAL;
+        this.centerCamera();
+        //todo : units become available
+
     }
 
     /**
