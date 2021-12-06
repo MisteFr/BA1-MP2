@@ -1,16 +1,19 @@
 package ch.epfl.cs107.play.game.icwars.actor.players;
 
-import ch.epfl.cs107.play.Play;
+import ch.epfl.cs107.play.game.areagame.actor.Interactable;
+import ch.epfl.cs107.play.game.areagame.actor.Interactor;
+import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
+import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.game.icwars.area.ICWarsRange;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public abstract class ICWarsPlayer extends ICWarsActor {
+public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     protected PlayState currentState;
     protected Unit selectedUnit = null;
     protected ArrayList<Unit> unitsList = new ArrayList<Unit>();
@@ -113,4 +116,38 @@ public abstract class ICWarsPlayer extends ICWarsActor {
     public void setCurrentState(PlayState state){
         currentState = state;
     }
+
+
+    // Interactor interface methods
+    @Override
+    public List<DiscreteCoordinates> getCurrentCells() {
+        return Collections.singletonList(getCurrentMainCellCoordinates());
+    }
+
+    @Override
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return null;
+    }
+
+    @Override
+    public boolean wantsCellInteraction() {
+        return false;
+    }
+
+    @Override
+    public boolean wantsViewInteraction() {
+        return false;
+    }
+
+    @Override
+    public void interactWith(Interactable other) {
+
+    }
+
+    @Override
+    public void acceptInteraction(AreaInteractionVisitor visitor){
+        ((ICWarsInteractionVisitor)visitor).interactWith(this);
+    }
+
+
 }

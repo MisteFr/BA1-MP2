@@ -60,4 +60,8 @@ public abstract class ICWarsActor extends MovableAreaEntity {
     public List<DiscreteCoordinates> getCurrentCells() {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
+
+    public ICWarsFactionType getFaction() {
+        return faction;
+    }
 }

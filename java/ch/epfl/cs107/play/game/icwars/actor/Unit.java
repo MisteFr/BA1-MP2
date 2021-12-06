@@ -6,13 +6,14 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsRange;
+import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.Queue;
 
-public abstract class Unit extends ICWarsActor {
+public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisitor {
     protected boolean isAvailable;
     protected boolean isAlive;
     protected int hp;

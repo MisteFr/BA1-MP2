@@ -1,12 +1,14 @@
 package ch.epfl.cs107.play.game.icwars.actor.players;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
+import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
@@ -18,6 +20,7 @@ public class RealPlayer extends ICWarsPlayer {
     private Sprite sprite;
     private final static int MOVE_DURATION = 8;
     private ICWarsPlayerGUI gui;
+    private ICWarsInteractionHandler handler;
 
     public RealPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
         super(owner, coordinates, factionType, units);
@@ -40,7 +43,7 @@ public class RealPlayer extends ICWarsPlayer {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        Keyboard keyboard= getOwnerArea().getKeyboard();
+        Keyboard keyboard = getOwnerArea().getKeyboard();
 
         switch(getCurrentState()){
             case NORMAL:
@@ -153,11 +156,22 @@ public class RealPlayer extends ICWarsPlayer {
     }
 
     @Override
-    public List<DiscreteCoordinates> getCurrentCells() {
-        return Collections.singletonList(getCurrentMainCellCoordinates());
+    public void acceptInteraction(AreaInteractionVisitor v) {
     }
 
     @Override
-    public void acceptInteraction(AreaInteractionVisitor v) {
+    public void interactWith(Interactable other) {
+        other.acceptInteraction(handler);
+    }
+
+    private class ICWarsInteractionHandler implements ICWarsInteractionVisitor {
+        @Override
+        public void interactWith(Unit unit) {
+            if (getCurrentState() == PlayState.SELECT_CELL && (unit.getFaction() == getFaction())) {
+                selectedUnit = unit;
+                unit.acceptInteraction(handler);
+                gui.setSelectedUnit(unit);
+            }
+        }
     }
 }
