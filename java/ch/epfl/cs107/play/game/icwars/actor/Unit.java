@@ -20,7 +20,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     protected int moveRadius;
 
     private Sprite sprite;
-    protected ICWarsRange range = new ICWarsRange();
+    protected ICWarsRange range;
 
     public Unit(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, int mvRadius, int dmg, int hp){
         super(owner, coordinates, factionType);
@@ -78,11 +78,11 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     @Override
     public boolean changePosition(DiscreteCoordinates newPosition) {
-        if (!super.changePosition(newPosition) || range.nodeExists(newPosition)){
+        if (!super.changePosition(newPosition) || !range.nodeExists(newPosition)){
             return false;
         }
 
-        setRange(moveRadius, newPosition);
+        setRange(moveRadius, getCurrentMainCellCoordinates());
 
         return true;
     }
@@ -105,9 +105,10 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
         Function to initialise the node network according to a position and a radius
      */
     private void setRange(int moveRadius, DiscreteCoordinates coordinates){
+        range = new ICWarsRange();
         for(int x = (-moveRadius + coordinates.x); x <= (moveRadius + coordinates.x); x++){
             for(int y = (-moveRadius + coordinates.y); y <= (moveRadius + coordinates.y); y++){
-                if(x >= 0 && y >= 0 && x <= getOwnerArea().getWidth() && y <= getOwnerArea().getHeight()){
+                if(x >= 0 && y >= 0 && x <  getOwnerArea().getWidth() && y < getOwnerArea().getHeight()){
 
                     boolean hasLeftEdge = false;
                     if((x - coordinates.x) > -moveRadius && x > 0){
@@ -115,12 +116,12 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
                     }
 
                     boolean hasRightEdge = false;
-                    if((x- coordinates.x) < moveRadius && x < getOwnerArea().getWidth()){
+                    if((x- coordinates.x) < moveRadius && x <= getOwnerArea().getWidth()){
                         hasRightEdge = true;
                     }
 
                     boolean hasUpEdge = false;
-                    if((y - coordinates.y) < moveRadius && y < getOwnerArea().getHeight()){
+                    if((y - coordinates.y) < moveRadius && y <= getOwnerArea().getHeight()){
                         hasUpEdge = true;
                     }
 
@@ -157,6 +158,6 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
-        //TODO: check?
+        ((ICWarsInteractionVisitor)v).interactWith(this);
     }
 }

@@ -30,6 +30,8 @@ public class ICWars extends AreaGame {
 
         if(keyboard.get(Keyboard.N).isReleased()){
             if((areaIndex + 1) < areas.length){
+                //in case the player is in MOVE_UNIT/SELECT_CELL state
+                player.setCurrentState(ICWarsPlayer.PlayState.NORMAL);
                 ++areaIndex;
                 initArea(areas[areaIndex], false);
             }else{

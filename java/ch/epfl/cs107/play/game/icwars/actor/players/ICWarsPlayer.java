@@ -114,6 +114,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
      * @param state (PlayState): new state
      */
     public void setCurrentState(PlayState state){
+        System.out.println("New state is " + state);
         currentState = state;
     }
 
@@ -131,17 +132,12 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
 
     @Override
     public boolean wantsCellInteraction() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean wantsViewInteraction() {
         return false;
-    }
-
-    @Override
-    public void interactWith(Interactable other) {
-
     }
 
     @Override

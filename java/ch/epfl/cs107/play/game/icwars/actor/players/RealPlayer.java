@@ -4,7 +4,6 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
-import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
@@ -13,14 +12,11 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
-import java.util.Collections;
-import java.util.List;
-
 public class RealPlayer extends ICWarsPlayer {
     private Sprite sprite;
     private final static int MOVE_DURATION = 8;
     private ICWarsPlayerGUI gui;
-    private ICWarsInteractionHandler handler;
+    private ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
 
     public RealPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
         super(owner, coordinates, factionType, units);
@@ -53,9 +49,9 @@ public class RealPlayer extends ICWarsPlayer {
                 moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
-                if (keyboard.get(Keyboard.ENTER).isDown()){
+                if (keyboard.get(Keyboard.ENTER).isReleased()){
                     setCurrentState(PlayState.SELECT_CELL);
-                } else if (keyboard.get(Keyboard.TAB).isDown()){
+                } else if (keyboard.get(Keyboard.TAB).isReleased()){
                     setCurrentState(PlayState.IDLE);
                 }
                 break;
@@ -77,10 +73,12 @@ public class RealPlayer extends ICWarsPlayer {
                 moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
-                if (keyboard.get(Keyboard.ENTER).isDown()){
+                if (keyboard.get(Keyboard.ENTER).isReleased()){
                     this.selectedUnit.changePosition(new DiscreteCoordinates(getPosition()));
                     this.selectedUnit.setAvailable(false);
 
+                    setCurrentState(PlayState.NORMAL);
+                } else if (keyboard.get(Keyboard.TAB).isReleased()){
                     setCurrentState(PlayState.NORMAL);
                 }
                 break;
@@ -152,12 +150,9 @@ public class RealPlayer extends ICWarsPlayer {
 
     @Override
     public boolean isViewInteractable() {
-        return true;
+        return false;
     }
 
-    @Override
-    public void acceptInteraction(AreaInteractionVisitor v) {
-    }
 
     @Override
     public void interactWith(Interactable other) {
@@ -168,8 +163,8 @@ public class RealPlayer extends ICWarsPlayer {
         @Override
         public void interactWith(Unit unit) {
             if (getCurrentState() == PlayState.SELECT_CELL && (unit.getFaction() == getFaction())) {
+                System.out.println("You selected " + unit.getName());
                 selectedUnit = unit;
-                unit.acceptInteraction(handler);
                 gui.setSelectedUnit(unit);
             }
         }
