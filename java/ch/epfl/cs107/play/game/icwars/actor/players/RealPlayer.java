@@ -14,9 +14,9 @@ import ch.epfl.cs107.play.window.Keyboard;
 
 public class RealPlayer extends ICWarsPlayer {
     private final static int MOVE_DURATION = 8;
+    private final ICWarsPlayerGUI gui;
+    private final ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
     private Sprite sprite;
-    private ICWarsPlayerGUI gui;
-    private ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
 
     public RealPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
         super(owner, coordinates, factionType, units);
