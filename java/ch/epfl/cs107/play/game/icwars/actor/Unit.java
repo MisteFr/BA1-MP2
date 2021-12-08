@@ -116,12 +116,12 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
                     }
 
                     boolean hasRightEdge = false;
-                    if((x- coordinates.x) < moveRadius && x <= getOwnerArea().getWidth()){
+                    if((x- coordinates.x) < moveRadius && x < (getOwnerArea().getWidth() - 1)){
                         hasRightEdge = true;
                     }
 
                     boolean hasUpEdge = false;
-                    if((y - coordinates.y) < moveRadius && y <= getOwnerArea().getHeight()){
+                    if((y - coordinates.y) < moveRadius && y < (getOwnerArea().getHeight() - 1)){
                         hasUpEdge = true;
                     }
 
