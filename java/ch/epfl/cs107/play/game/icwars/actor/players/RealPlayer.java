@@ -13,8 +13,8 @@ import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
 public class RealPlayer extends ICWarsPlayer {
-    private Sprite sprite;
     private final static int MOVE_DURATION = 8;
+    private Sprite sprite;
     private ICWarsPlayerGUI gui;
     private ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
 
@@ -74,10 +74,11 @@ public class RealPlayer extends ICWarsPlayer {
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
                 if (keyboard.get(Keyboard.ENTER).isReleased()){
-                    this.selectedUnit.changePosition(new DiscreteCoordinates(getPosition()));
-                    this.selectedUnit.setAvailable(false);
+                    selectedUnit.changePosition(new DiscreteCoordinates(getPosition()));
+                    selectedUnit.setAvailable(false);
 
                     setCurrentState(PlayState.NORMAL);
+                    resetSelectedUnit();
                 } else if (keyboard.get(Keyboard.TAB).isReleased()){
                     setCurrentState(PlayState.NORMAL);
                 }
@@ -123,6 +124,14 @@ public class RealPlayer extends ICWarsPlayer {
         resetMotion();
     }
 
+    /**
+     * Reset the selected unit attribute of the GUI and the ICWarsPlayer.
+     */
+    public void resetSelectedUnit(){
+        selectedUnit = null;
+        gui.setSelectedUnit(null);
+    }
+
     /*
     public void selectUnit(int position){
         if(position < unitsList.size()){
@@ -152,7 +161,6 @@ public class RealPlayer extends ICWarsPlayer {
     public boolean isViewInteractable() {
         return false;
     }
-
 
     @Override
     public void interactWith(Interactable other) {

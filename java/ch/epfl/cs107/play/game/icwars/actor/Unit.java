@@ -78,10 +78,11 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     @Override
     public boolean changePosition(DiscreteCoordinates newPosition) {
-        if (!super.changePosition(newPosition) || !range.nodeExists(newPosition)){
+        if (!range.nodeExists(newPosition) || !super.changePosition(newPosition)){
             return false;
         }
 
+        //update the range.
         setRange(moveRadius, getCurrentMainCellCoordinates());
 
         return true;
@@ -110,25 +111,10 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
             for(int y = (-moveRadius + coordinates.y); y <= (moveRadius + coordinates.y); y++){
                 if(x >= 0 && y >= 0 && x <  getOwnerArea().getWidth() && y < getOwnerArea().getHeight()){
 
-                    boolean hasLeftEdge = false;
-                    if((x - coordinates.x) > -moveRadius && x > 0){
-                        hasLeftEdge = true;
-                    }
-
-                    boolean hasRightEdge = false;
-                    if((x- coordinates.x) < moveRadius && x < (getOwnerArea().getWidth() - 1)){
-                        hasRightEdge = true;
-                    }
-
-                    boolean hasUpEdge = false;
-                    if((y - coordinates.y) < moveRadius && y < (getOwnerArea().getHeight() - 1)){
-                        hasUpEdge = true;
-                    }
-
-                    boolean hasDownEdge = false;
-                    if((y - coordinates.y) > -moveRadius && y > 0){
-                        hasDownEdge = true;
-                    }
+                    boolean hasLeftEdge = (x - coordinates.x) > -moveRadius && x > 0;
+                    boolean hasRightEdge = (x - coordinates.x) < moveRadius && x < (getOwnerArea().getWidth() - 1);
+                    boolean hasUpEdge = (y - coordinates.y) < moveRadius && y < (getOwnerArea().getHeight() - 1);
+                    boolean hasDownEdge = (y - coordinates.y) > -moveRadius && y > 0;
 
                     range.addNode(new DiscreteCoordinates(x, y), hasLeftEdge, hasUpEdge, hasRightEdge, hasDownEdge);
                 }

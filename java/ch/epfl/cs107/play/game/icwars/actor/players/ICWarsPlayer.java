@@ -1,6 +1,5 @@
 package ch.epfl.cs107.play.game.icwars.actor.players;
 
-import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
@@ -144,6 +143,4 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     public void acceptInteraction(AreaInteractionVisitor visitor){
         ((ICWarsInteractionVisitor)visitor).interactWith(this);
     }
-
-
 }
