@@ -65,13 +65,11 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
      */
     public void setAvailable(boolean available) {
         isAvailable = available;
-    }
-
-    /**
-     * @return (boolean): availability of the unit
-     */
-    public boolean getAvailability(){
-        return this.isAvailable;
+        if(available){
+            sprite.setAlpha(1.f);
+        }else{
+            sprite.setAlpha(0.5f);
+        }
     }
 
     /**

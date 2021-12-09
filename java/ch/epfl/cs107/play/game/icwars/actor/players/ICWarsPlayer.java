@@ -8,25 +8,23 @@ import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     protected PlayState currentState;
     protected Unit selectedUnit = null;
-    protected ArrayList<Unit> unitsList = new ArrayList<Unit>();
+    protected List<Unit> unitsList = new LinkedList<>();
 
 
-    ICWarsPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units){
-        super(owner, coordinates, factionType);
+    ICWarsPlayer(ICWarsArea area, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units){
+        super(area, coordinates, factionType);
         setCurrentState(PlayState.IDLE);
 
         for(Unit unit : units){
+            area.addUnit(unit);
             unitsList.add(unit);
-        }
-        for(Unit unit : unitsList){
-            owner.registerActor(unit);
         }
     }
 
@@ -36,9 +34,10 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
 
     @Override
     public void update(float deltaTime) {
-        for(Unit unit: unitsList){
+        ICWarsArea area = (ICWarsArea) getOwnerArea();
+        for(Unit unit: area.getUnitsList()){
             if(unit.getHp() <= 0){
-                getOwnerArea().unregisterActor(unit);
+                area.removeUnit(unit);
                 unitsList.remove(unit);
             }
         }
@@ -51,16 +50,6 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
             getOwnerArea().unregisterActor(unit);
         }
         super.leaveArea();
-    }
-
-    @Override
-    public boolean takeCellSpace() {
-        return false;
-    }
-
-    @Override
-    public boolean isViewInteractable() {
-        return false;
     }
 
     /**
@@ -117,6 +106,13 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         currentState = state;
     }
 
+    /**
+     * Get the unitsList of the player
+     */
+    public List<Unit> getUnitsList() {
+        return unitsList;
+    }
+
     // Interactor interface methods
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
@@ -135,6 +131,16 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
 
     @Override
     public boolean wantsViewInteraction() {
+        return false;
+    }
+
+    @Override
+    public boolean takeCellSpace() {
+        return false;
+    }
+
+    @Override
+    public boolean isViewInteractable() {
         return false;
     }
 

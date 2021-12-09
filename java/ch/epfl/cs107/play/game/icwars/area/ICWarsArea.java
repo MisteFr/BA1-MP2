@@ -22,6 +22,33 @@ public abstract class ICWarsArea extends Area {
 
     public abstract DiscreteCoordinates getDefaultCursorPosition();
 
+    public abstract DiscreteCoordinates getEnemySpawnPosition();
+
+    /**
+     * @param unit
+     * Add an unit to the area and to the unitsList.
+     */
+    public void addUnit(Unit unit){
+        registerActor(unit);
+        unitsList.add(unit);
+    }
+
+    /**
+     * @param unit
+     * Remove a unit from the area and from the unitsList.
+     */
+    public void removeUnit(Unit unit){
+        unregisterActor(unit);
+        unitsList.remove(unit);
+    }
+
+    /**
+     * @return List<Unit>
+     */
+    public List<Unit> getUnitsList(){
+        return unitsList;
+    }
+
     @Override
     public boolean begin(Window window, FileSystem fileSystem){
         if(super.begin(window, fileSystem)) {
