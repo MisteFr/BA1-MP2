@@ -29,7 +29,7 @@ public class ICWars extends AreaGame {
     private ICWarsPlayer currentPlayer;
 
     private int areaIndex;
-    private int  playerIndex;
+    private int playerIndex;
 
 
     public enum GameState {
@@ -106,7 +106,7 @@ public class ICWars extends AreaGame {
                 break;
 
             case END:
-                end();
+                switchToNextLevel();
                 break;
         }
 
@@ -114,15 +114,7 @@ public class ICWars extends AreaGame {
         Keyboard keyboard = getCurrentArea().getKeyboard();
 
         if(keyboard.get(Keyboard.N).isReleased()){
-            if((areaIndex + 1) < areas.length){
-                for(ICWarsPlayer player: playersList){
-                    player.setCurrentState(ICWarsPlayer.PlayState.IDLE);
-                }
-                ++areaIndex;
-                startGame(areaIndex, true);
-            }else{
-                end();
-            }
+            switchToNextLevel();
         }
 
         if(keyboard.get(Keyboard.R).isReleased()){
@@ -138,6 +130,21 @@ public class ICWars extends AreaGame {
             ((RealPlayer)player).selectUnit(1);
         }
          */
+    }
+
+    private void switchToNextLevel(){
+        if((areaIndex + 1) < areas.length){
+            for(ICWarsPlayer player: playersList){
+                player.setCurrentState(ICWarsPlayer.PlayState.IDLE);
+            }
+            ++areaIndex;
+            nextTurnWaitingPlayers.clear();
+            currentTurnWaitingPlayers.clear();
+            playersList.clear();
+            currentState = GameState.INIT;
+        }else{
+            end();
+        }
     }
 
     private void createAreas(){
@@ -194,14 +201,6 @@ public class ICWars extends AreaGame {
 
     public String getTitle(){
         return "ICWars";
-    }
-
-    public void checkForDefeatedPlayers(){
-        for (ICWarsPlayer player : playersList){
-            if (player.isDefeated()){
-                playersList.remove(player);
-            }
-        }
     }
 }
 

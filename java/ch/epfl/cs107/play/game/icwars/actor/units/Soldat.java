@@ -4,7 +4,7 @@ import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-public class Soldat extends Unit {
+public class    Soldat extends Unit {
     private final static String NAME = "Soldier";
     private final static int HP_MAX = 5;
     private final static int DAMAGE = 2;

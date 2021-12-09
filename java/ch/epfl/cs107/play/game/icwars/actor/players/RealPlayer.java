@@ -62,7 +62,7 @@ public class RealPlayer extends ICWarsPlayer {
                 moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
-                if (selectedUnit != null){
+                if (selectedUnit != null && selectedUnit.isAvailable()){
                     setCurrentState(PlayState.MOVE_UNIT);
                 }
                 break;
@@ -74,8 +74,10 @@ public class RealPlayer extends ICWarsPlayer {
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
                 if (keyboard.get(Keyboard.ENTER).isReleased()){
-                    selectedUnit.changePosition(new DiscreteCoordinates(getPosition()));
-                    selectedUnit.setAvailable(false);
+                    if (selectedUnit.isAvailable()){
+                        selectedUnit.changePosition(new DiscreteCoordinates(getPosition()));
+                        selectedUnit.setAvailable(false);
+                    }
 
                     setCurrentState(PlayState.NORMAL);
                     resetSelectedUnit();

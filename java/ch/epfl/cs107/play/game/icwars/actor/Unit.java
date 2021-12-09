@@ -73,6 +73,13 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     }
 
     /**
+     * @return isAvailable (boolean): unit's availability (true if it can be moved)
+     */
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    /**
      * @param amount (int): amount of health points to add
      */
     public void heal(int amount){
@@ -81,6 +88,11 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
         }
     }
 
+    /**
+     * Change the unit position to the one specified
+     * @param newPosition new unit's position
+     * @return true if the move was successful, false otherwise
+     */
     @Override
     public boolean changePosition(DiscreteCoordinates newPosition) {
         if (!range.nodeExists(newPosition) || !super.changePosition(newPosition)){
@@ -108,7 +120,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     }
 
     /**
-        Function to initialise the node network according to a position and a radius
+     * Function to initialise the node network according to a position and a radius
      */
     private void setRange(int moveRadius, DiscreteCoordinates coordinates){
         range = new ICWarsRange();
@@ -125,6 +137,10 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
                 }
             }
         }
+    }
+
+    public ICWarsRange getRange(){
+        return range;
     }
 
     @Override
