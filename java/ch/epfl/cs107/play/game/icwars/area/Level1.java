@@ -5,6 +5,10 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class Level1 extends ICWarsArea{
 
+    public DiscreteCoordinates getEnemySpawnPosition(){
+        return new DiscreteCoordinates(17,5);
+    }
+
     @Override
     public float getCameraScaleFactor() {
         return SCALE_FACTOR;

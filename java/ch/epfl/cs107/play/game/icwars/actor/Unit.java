@@ -68,6 +68,13 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     }
 
     /**
+     * @return (boolean): availability of the unit
+     */
+    public boolean getAvailability(){
+        return this.isAvailable;
+    }
+
+    /**
      * @param amount (int): amount of health points to add
      */
     public void heal(int amount){

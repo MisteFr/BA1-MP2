@@ -117,7 +117,6 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         currentState = state;
     }
 
-
     // Interactor interface methods
     @Override
     public List<DiscreteCoordinates> getCurrentCells() {
