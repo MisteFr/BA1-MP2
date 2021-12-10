@@ -49,6 +49,10 @@ public abstract class ICWarsArea extends Area {
         return unitsList;
     }
 
+    public void resetArea(){
+        unitsList.clear();
+    }
+
     @Override
     public boolean begin(Window window, FileSystem fileSystem){
         if(super.begin(window, fileSystem)) {

@@ -1,23 +1,30 @@
 package ch.epfl.cs107.play.game.icwars.actor;
 
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
-import ch.epfl.cs107.play.game.areagame.actor.Path;
-import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
+import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
+import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
+import ch.epfl.cs107.play.game.icwars.area.ICWarsBehavior;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsRange;
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
-public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisitor {
+public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisitor, Interactor {
     protected boolean isAvailable;
     protected boolean isAlive;
     protected int hp;
     protected int moveRadius;
+    protected int defenseStars;
+    protected LinkedList<Action> actionsList = new LinkedList<>();
+    private final ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
 
     private Sprite sprite;
     protected ICWarsRange range;
@@ -47,7 +54,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
 
     /**
-     * @return (int): the number of health points of the actor.
+     * @return (int): the number of health points of the unit.
      */
     public int getHp() {
         return hp;
@@ -58,6 +65,27 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
      */
     public void setHp(int amount){
         hp = Math.max(amount, 0);
+    }
+
+    /**
+     * @return (int): the move radius of the unit.
+     */
+    public int getMoveRadius() {
+        return moveRadius;
+    }
+
+    /**
+     * @return (int): the defense stars of the cell of the unit.
+     */
+    public int getUnitCellDefenseStars() {
+        return defenseStars;
+    }
+
+    /**
+     * @return (LinkedList<Action>): the action list of the unit.
+     */
+    public LinkedList<Action> getActionsList() {
+        return actionsList;
     }
 
     /**
@@ -164,7 +192,34 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     }
 
     @Override
+    public boolean wantsCellInteraction() {
+        return true;
+    }
+
+    @Override
+    public boolean wantsViewInteraction() {
+        return false;
+    }
+
+    @Override
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        return null;
+    }
+
+    @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ICWarsInteractionVisitor)v).interactWith(this);
+    }
+
+    @Override
+    public void interactWith(Interactable other) {
+        other.acceptInteraction(handler);
+    }
+
+    private class ICWarsInteractionHandler implements ICWarsInteractionVisitor {
+        @Override
+        public void interactWith(ICWarsBehavior.ICWarsCell cell) {
+            defenseStars = cell.getType().getDefenseStar();
+        }
     }
 }

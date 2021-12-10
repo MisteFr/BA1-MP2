@@ -5,7 +5,9 @@ import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
+import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
+import ch.epfl.cs107.play.game.icwars.area.ICWarsBehavior;
 import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -17,6 +19,7 @@ public class RealPlayer extends ICWarsPlayer {
     private final ICWarsPlayerGUI gui;
     private final ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
     private Sprite sprite;
+    private Action currentAction;
 
     public RealPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
         super(owner, coordinates, factionType, units);
@@ -77,19 +80,22 @@ public class RealPlayer extends ICWarsPlayer {
                     if (selectedUnit.isAvailable()){
                         selectedUnit.changePosition(new DiscreteCoordinates(getPosition()));
                         selectedUnit.setAvailable(false);
+                        setCurrentState(PlayState.ACTION_SELECTION);
                     }
-
-                    setCurrentState(PlayState.NORMAL);
-                    resetSelectedUnit();
                 } else if (keyboard.get(Keyboard.TAB).isReleased()){
                     setCurrentState(PlayState.NORMAL);
                 }
                 break;
-            case ACTION:
-                //todo: write some code here later
-                break;
             case ACTION_SELECTION:
-                //todo: write some code here later
+                for(Action act: selectedUnit.getActionsList()){
+                    if (keyboard.get(act.getKey()).isDown()){
+                        currentAction = act;
+                        setCurrentState(PlayState.ACTION);
+                    }
+                }
+                break;
+            case ACTION:
+                currentAction.doAction(deltaTime, this, keyboard);
                 break;
         }
     }
@@ -103,6 +109,7 @@ public class RealPlayer extends ICWarsPlayer {
             if (!isDisplacementOccurs()) {
                 orientate(orientation);
                 move(MOVE_DURATION);
+                //gui.setCell();
             }
         }
     }
@@ -126,14 +133,6 @@ public class RealPlayer extends ICWarsPlayer {
         resetMotion();
     }
 
-    /**
-     * Reset the selected unit attribute of the GUI and the ICWarsPlayer.
-     */
-    public void resetSelectedUnit(){
-        selectedUnit = null;
-        gui.setSelectedUnit(null);
-    }
-
     /*
     public void selectUnit(int position){
         if(position < unitsList.size()){
@@ -148,6 +147,9 @@ public class RealPlayer extends ICWarsPlayer {
         if(getCurrentState() != PlayState.IDLE){
             sprite.draw(canvas);
             gui.draw(canvas);
+        }
+        if(getCurrentState() == PlayState.ACTION){
+            currentAction.draw(canvas);
         }
     }
 
@@ -168,7 +170,7 @@ public class RealPlayer extends ICWarsPlayer {
 
     @Override
     public void interactWith(Interactable other) {
-        other.acceptInteraction(handler);
+                other.acceptInteraction(handler);
     }
 
     private class ICWarsInteractionHandler implements ICWarsInteractionVisitor {
@@ -179,6 +181,10 @@ public class RealPlayer extends ICWarsPlayer {
                 selectedUnit = unit;
                 gui.setSelectedUnit(unit);
             }
+        }
+
+        public void interactWith(ICWarsBehavior.ICWarsCell cell) {
+            gui.setCell(cell.getType());
         }
     }
 }

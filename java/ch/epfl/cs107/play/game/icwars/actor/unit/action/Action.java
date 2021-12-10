@@ -1,4 +1,4 @@
-package ch.epfl.cs107.play.game.icwars.actor.units.action;
+package ch.epfl.cs107.play.game.icwars.actor.unit.action;
 
 import ch.epfl.cs107.play.game.actor.Graphics;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
@@ -7,16 +7,18 @@ import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
-public abstract class ActionC implements Graphics {
-    protected Unit unit;
-    private ICWarsArea owner;
-    private String name; // how do we code that all actions have
-    private int key;     // these two parameters ?
+public abstract class Action implements Graphics {
+    protected Unit actionUnit;
+    protected ICWarsArea owner;
 
-    public ActionC(Unit unit, ICWarsArea owner){
-        this.unit = unit;
+    public Action(Unit unit, ICWarsArea owner){
+        this.actionUnit = unit;
         this.owner = owner;
     }
+
+    public abstract String getName();
+
+    public abstract int getKey();
 
     @Override
     public abstract void draw(Canvas canvas);

@@ -5,8 +5,8 @@ import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
-import ch.epfl.cs107.play.game.icwars.actor.units.Tank;
-import ch.epfl.cs107.play.game.icwars.actor.units.Soldat;
+import ch.epfl.cs107.play.game.icwars.actor.unit.Tank;
+import ch.epfl.cs107.play.game.icwars.actor.unit.Soldat;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.Level0;
 import ch.epfl.cs107.play.game.icwars.area.Level1;
@@ -38,6 +38,8 @@ public class ICWars extends AreaGame {
 
     @Override
     public void update(float deltaTime){
+        super.update(deltaTime);
+
         switch (currentState){
             case INIT:
                 System.out.println("state is INIT");
@@ -72,6 +74,7 @@ public class ICWars extends AreaGame {
             case END_PLAYER_TURN:
                 System.out.println("state is END PLAYER TURN");
                 if(currentPlayer.isDefeated()){
+                    System.out.println("HERE");
                     currentPlayer.leaveArea();
                 }else{
                     nextTurnWaitingPlayers.add(currentPlayer);
@@ -110,7 +113,6 @@ public class ICWars extends AreaGame {
                 break;
         }
 
-        super.update(deltaTime);
         Keyboard keyboard = getCurrentArea().getKeyboard();
 
         if(keyboard.get(Keyboard.N).isReleased()){
@@ -119,9 +121,18 @@ public class ICWars extends AreaGame {
 
         if(keyboard.get(Keyboard.R).isReleased()){
             areaIndex = 0;
+
             nextTurnWaitingPlayers.clear();
             currentTurnWaitingPlayers.clear();
+
+            for(ICWarsPlayer player: playersList){
+                player.leaveArea();
+            }
             playersList.clear();
+
+            ICWarsArea area = (ICWarsArea) getCurrentArea();
+            area.resetArea();
+
             currentState = GameState.INIT;
         }
 
@@ -164,7 +175,8 @@ public class ICWars extends AreaGame {
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             createAreas();
-            currentState = GameState.INIT;
+            startGame(areaIndex, true);
+            currentState = GameState.CHOOSE_PLAYER;
             return true;
         }
         return false;

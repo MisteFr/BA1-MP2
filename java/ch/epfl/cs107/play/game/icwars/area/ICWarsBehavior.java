@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.icwars.area;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.window.Window;
 
 public class ICWarsBehavior extends AreaBehavior {
@@ -31,6 +32,28 @@ public class ICWarsBehavior extends AreaBehavior {
             }
             return NONE;
         }
+
+        public int getDefenseStar() {
+            return numberDefenseStars;
+        }
+
+        public String typeToString(){
+            switch (this){
+                case ROAD:
+                    return "ROAD";
+                case PLAIN:
+                    return "PLAIN";
+                case WOOD:
+                    return "WOOD";
+                case RIVER:
+                    return "RIVER";
+                case MOUNTAIN:
+                    return "MOUTAIN";
+                case CITY:
+                    return "CITY";
+            }
+            return "NONE";
+        }
     }
 
     /**
@@ -44,7 +67,6 @@ public class ICWarsBehavior extends AreaBehavior {
         int width = getWidth();
         for(int y = 0; y < height; y++) {
             for (int x = 0; x < width ; x++) {
-                //TODO: initialise?
                 ICWarsBehavior.ICWarsCellType color = ICWarsBehavior.ICWarsCellType.toType(getRGB(height-1-y, x));
                 setCell(x,y, new ICWarsBehavior.ICWarsCell(x,y, color));
             }
@@ -61,7 +83,7 @@ public class ICWarsBehavior extends AreaBehavior {
         /**
          * Default ICWarsCell Constructor
          * @param x (int): x coordinate of the cell
-         * @param y (int): y coordinate of the cell
+         * @param y (int): y coordinate of thecell
          * @param type (ICWarsCellType), not null
          */
         public ICWarsCell(int x, int y, ICWarsBehavior.ICWarsCellType type){
@@ -89,6 +111,9 @@ public class ICWarsBehavior extends AreaBehavior {
             return true;
         }
 
+        public ICWarsCellType getType() {
+            return type;
+        }
 
         @Override
         public boolean isCellInteractable() {
@@ -102,6 +127,7 @@ public class ICWarsBehavior extends AreaBehavior {
 
         @Override
         public void acceptInteraction(AreaInteractionVisitor v) {
+            ((ICWarsInteractionVisitor)v).interactWith(this);
         }
 
     }

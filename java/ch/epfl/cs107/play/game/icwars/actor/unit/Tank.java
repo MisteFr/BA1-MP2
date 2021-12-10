@@ -1,6 +1,8 @@
-package ch.epfl.cs107.play.game.icwars.actor.units;
+package ch.epfl.cs107.play.game.icwars.actor.unit;
 
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
+import ch.epfl.cs107.play.game.icwars.actor.unit.action.Attack;
+import ch.epfl.cs107.play.game.icwars.actor.unit.action.Wait;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
@@ -13,6 +15,8 @@ public class Tank extends Unit {
     public Tank(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType){
         super(owner, coordinates, factionType, Tank.MOVE_RADIUS, Tank.DAMAGE, Tank.HP_MAX);
         this.setHp(HP_MAX);
+        actionsList.add(new Attack(this, owner));
+        actionsList.add(new Wait(this, owner));
     }
 
     @Override

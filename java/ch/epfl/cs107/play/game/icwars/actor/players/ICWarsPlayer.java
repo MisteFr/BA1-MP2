@@ -38,17 +38,19 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         for(Unit unit: area.getUnitsList()){
             if(unit.getHp() <= 0){
                 area.removeUnit(unit);
-                unitsList.remove(unit);
             }
+            unitsList.remove(unit);
         }
         super.update(deltaTime);
     }
 
     @Override
     public void leaveArea() {
+        ICWarsArea area = (ICWarsArea) getOwnerArea();
         for(Unit unit: unitsList){
-            getOwnerArea().unregisterActor(unit);
+            area.removeUnit(unit);
         }
+        unitsList.clear();
         super.leaveArea();
     }
 
