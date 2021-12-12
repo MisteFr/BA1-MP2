@@ -41,6 +41,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
                 System.out.println(unit.getName() + " no longer has HP");
                 unitsList.remove(unit);
                 area.removeUnit(unit);
+                area.unregisterActor(unit);
             }
         }
     }
