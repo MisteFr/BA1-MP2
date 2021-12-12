@@ -40,6 +40,8 @@ public class ICWars extends AreaGame {
     public void update(float deltaTime){
         super.update(deltaTime);
 
+        //System.out.println(getCurrentArea());
+
         switch (currentState){
             case INIT:
                 System.out.println("state is INIT");
@@ -65,7 +67,7 @@ public class ICWars extends AreaGame {
                 break;
 
             case PLAYER_TURN:
-                System.out.println("state is PLAYER TURN");
+                //System.out.println("state is PLAYER TURN");
                 if(currentPlayer.getCurrentState() == ICWarsPlayer.PlayState.IDLE){
                     currentState = GameState.END_PLAYER_TURN;
                 }
@@ -74,7 +76,7 @@ public class ICWars extends AreaGame {
             case END_PLAYER_TURN:
                 System.out.println("state is END PLAYER TURN");
                 if(currentPlayer.isDefeated()){
-                    System.out.println("HERE");
+                    System.out.println("calling leave area");
                     currentPlayer.leaveArea();
                 }else{
                     nextTurnWaitingPlayers.add(currentPlayer);
@@ -109,31 +111,29 @@ public class ICWars extends AreaGame {
                 break;
 
             case END:
-                switchToNextLevel();
+                if((areaIndex + 1) < areas.length) {
+                    ++areaIndex;
+                    resetGame();
+                }else{
+                    end();
+                }
                 break;
         }
 
         Keyboard keyboard = getCurrentArea().getKeyboard();
 
         if(keyboard.get(Keyboard.N).isReleased()){
-            switchToNextLevel();
+            if((areaIndex + 1) < areas.length) {
+                ++areaIndex;
+                resetGame();
+            }else{
+                end();
+            }
         }
 
         if(keyboard.get(Keyboard.R).isReleased()){
             areaIndex = 0;
-
-            nextTurnWaitingPlayers.clear();
-            currentTurnWaitingPlayers.clear();
-
-            for(ICWarsPlayer player: playersList){
-                player.leaveArea();
-            }
-            playersList.clear();
-
-            ICWarsArea area = (ICWarsArea) getCurrentArea();
-            area.resetArea();
-
-            currentState = GameState.INIT;
+            resetGame();
         }
 
         /* //commented based on the instructions from the assignment
@@ -143,19 +143,19 @@ public class ICWars extends AreaGame {
          */
     }
 
-    private void switchToNextLevel(){
-        if((areaIndex + 1) < areas.length){
-            for(ICWarsPlayer player: playersList){
-                player.setCurrentState(ICWarsPlayer.PlayState.IDLE);
-            }
-            ++areaIndex;
-            nextTurnWaitingPlayers.clear();
-            currentTurnWaitingPlayers.clear();
-            playersList.clear();
-            currentState = GameState.INIT;
-        }else{
-            end();
+    private void resetGame(){
+        nextTurnWaitingPlayers.clear();
+        currentTurnWaitingPlayers.clear();
+
+        for(ICWarsPlayer player: playersList){
+            player.leaveArea();
         }
+        playersList.clear();
+
+        ICWarsArea area = (ICWarsArea) getCurrentArea();
+        area.resetArea();
+
+        currentState = GameState.INIT;
     }
 
     private void createAreas(){

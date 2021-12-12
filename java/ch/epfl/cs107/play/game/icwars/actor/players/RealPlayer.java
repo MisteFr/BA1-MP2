@@ -14,6 +14,8 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
+import java.util.List;
+
 public class RealPlayer extends ICWarsPlayer {
     private final static int MOVE_DURATION = 8;
     private final ICWarsPlayerGUI gui;
@@ -154,6 +156,12 @@ public class RealPlayer extends ICWarsPlayer {
     }
 
     @Override
+    public void onLeaving(List<DiscreteCoordinates> coordinates) {
+        super.onLeaving(coordinates);
+        gui.setHoveredUnit(null);
+    }
+
+    @Override
     public boolean takeCellSpace() {
         return false;
     }
@@ -176,11 +184,12 @@ public class RealPlayer extends ICWarsPlayer {
     private class ICWarsInteractionHandler implements ICWarsInteractionVisitor {
         @Override
         public void interactWith(Unit unit) {
-            if (getCurrentState() == PlayState.SELECT_CELL && (unit.getFaction() == getFaction())) {
-                System.out.println("You selected " + unit.getName());
+            if (getCurrentState() == PlayState.SELECT_CELL && (unit.getFaction() == getFaction()) && selectedUnit != unit) {
                 selectedUnit = unit;
                 gui.setSelectedUnit(unit);
             }
+
+            gui.setHoveredUnit(unit);
         }
 
         public void interactWith(ICWarsBehavior.ICWarsCell cell) {

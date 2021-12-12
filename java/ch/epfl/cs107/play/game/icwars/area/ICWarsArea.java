@@ -38,8 +38,9 @@ public abstract class ICWarsArea extends Area {
      * Remove a unit from the area and from the unitsList.
      */
     public void removeUnit(Unit unit){
-        unregisterActor(unit);
         unitsList.remove(unit);
+        System.out.println("unregister?");
+        unregisterActor(unit);
     }
 
     /**

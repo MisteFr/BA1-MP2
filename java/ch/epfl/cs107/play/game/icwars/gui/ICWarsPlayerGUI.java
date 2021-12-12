@@ -42,7 +42,10 @@ public class ICWarsPlayerGUI implements Graphics {
 
     public void setSelectedUnit(Unit selectedUnit) {
         this.selectedUnit = selectedUnit;
-        infoPanel.setUnit(selectedUnit);
+    }
+
+    public void setHoveredUnit(Unit hoveredUnit) {
+        infoPanel.setUnit(hoveredUnit);
     }
 
     public void setCell(ICWarsBehavior.ICWarsCellType cellType) {

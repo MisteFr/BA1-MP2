@@ -63,9 +63,6 @@ public class Attack extends Action {
             }
         }
 
-
-        System.out.println(enemyUnits);
-
         if(!enemyUnits.isEmpty()){
             if(keyboard.get(Keyboard.LEFT).isReleased()){
                 if((indexUnitToAttack - 1) >= 0){
@@ -80,10 +77,16 @@ public class Attack extends Action {
             } else if (keyboard.get(Keyboard.ENTER).isReleased()) {
                 Unit selectedUnitToAttack = owner.getUnitsList().get(enemyUnits.get(indexUnitToAttack));
                 System.out.println("You are attacking: " + selectedUnitToAttack.getName() + " fac is :" + selectedUnitToAttack.getFaction());
+
                 selectedUnitToAttack.setHp(selectedUnitToAttack.getHp() - actionUnit.getDamage() + selectedUnitToAttack.getUnitCellDefenseStars());
+
                 actionUnit.setAvailable(false);
                 owner.setViewCandidate(player);
                 player.setCurrentState(ICWarsPlayer.PlayState.NORMAL);
+
+                //reset
+                enemyUnits.clear();
+                indexUnitToAttack = 0;
             }
         }else{
             owner.setViewCandidate(player);
