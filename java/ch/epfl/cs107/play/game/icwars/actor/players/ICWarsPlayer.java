@@ -36,10 +36,11 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     public void update(float deltaTime) {
         super.update(deltaTime);
         ICWarsArea area = (ICWarsArea) getOwnerArea();
-        for(Unit unit: area.getUnitsList()){
-            if(unit.getHp() == 0){
-                unitsList.remove(unit);
-                area.removeUnit(unit);
+
+        for(int i = 0; i < area.getUnitsList().size(); i++){
+            if(area.getUnitsList().get(i).getHp() == 0){
+                unitsList.remove(area.getUnitsList().get(i));
+                area.removeUnit(area.getUnitsList().get(i));
             }
         }
     }
@@ -60,11 +61,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
      * @return (boolean)
      */
     public boolean isDefeated() {
-        if(unitsList.size() == 0){
-            return  true;
-        }
-
-        return false;
+        return unitsList.size() == 0;
     }
 
     /**

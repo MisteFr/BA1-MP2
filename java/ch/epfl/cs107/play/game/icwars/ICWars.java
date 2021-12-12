@@ -19,7 +19,6 @@ import java.util.LinkedList;
 
 public class ICWars extends AreaGame {
 
-    //private ICWarsPlayer player; --> old version
     private GameState currentState;
     private final String[] areas = {"icwars/Level0", "icwars/Level1"};
 
