@@ -41,7 +41,6 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
         moveRadius = mvRadius;
         setRange(moveRadius, coordinates);
-        owner.registerActor(this);
     }
 
     public abstract String getName();

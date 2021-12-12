@@ -178,7 +178,9 @@ public class RealPlayer extends ICWarsPlayer {
 
     @Override
     public void interactWith(Interactable other) {
-                other.acceptInteraction(handler);
+        if (!isDisplacementOccurs()) {
+            other.acceptInteraction(handler);
+        }
     }
 
     private class ICWarsInteractionHandler implements ICWarsInteractionVisitor {
