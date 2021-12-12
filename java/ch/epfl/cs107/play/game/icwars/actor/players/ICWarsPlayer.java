@@ -40,6 +40,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
             if(unit.getHp() == 0){
                 unitsList.remove(unit);
                 area.removeUnit(unit);
+                area.unregisterActor(unit);
             }
         }
     }
