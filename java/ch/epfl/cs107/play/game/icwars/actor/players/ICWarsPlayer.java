@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.icwars.actor.players;
 
+import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
@@ -73,6 +74,16 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
             unit.setAvailable(true);
         }
         centerCamera();
+    }
+
+    /**
+     * @param area (Area): initial area, not null
+     */
+    public void enterArea(Area area){
+        area.registerActor(this);
+        area.setViewCandidate(this);
+        setOwnerArea(area);
+        resetMotion();
     }
 
     @Override

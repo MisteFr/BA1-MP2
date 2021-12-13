@@ -34,13 +34,6 @@ public class RealPlayer extends ICWarsPlayer {
         gui = new ICWarsPlayerGUI(10f, this);
     }
 
-    /**
-     * Center the camera on the player
-     */
-    public void centerCamera() {
-        getOwnerArea().setViewCandidate(this);
-    }
-
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -123,16 +116,6 @@ public class RealPlayer extends ICWarsPlayer {
      */
     public void leaveArea(){
         getOwnerArea().unregisterActor(this);
-    }
-
-    /**
-     * @param area (Area): initial area, not null
-     */
-    public void enterArea(Area area){
-        area.registerActor(this);
-        area.setViewCandidate(this);
-        setOwnerArea(area);
-        resetMotion();
     }
 
     /*

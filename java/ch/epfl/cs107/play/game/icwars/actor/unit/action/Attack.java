@@ -99,6 +99,44 @@ public class Attack extends Action {
         }
     }
 
+    @Override
+    public void doAutoAction(float dt, ICWarsPlayer player) {
+        System.out.println("action bot");
+        int range = actionUnit.getMoveRadius();
+        DiscreteCoordinates selectedUnitPosition = new DiscreteCoordinates(actionUnit.getPosition());
+        List<Unit> unitsList = owner.getUnitsList();
+
+        int indexUnitWithLowestHp = -1;
+        int lowestHpRecorded = Integer.MAX_VALUE;
+        enemyUnits.clear();
+        for(int i = 0; i < unitsList.size(); ++i){
+            if(unitsList.get(i).getFaction() != actionUnit.getFaction()) {
+                DiscreteCoordinates unitAreaPosition = new DiscreteCoordinates(unitsList.get(i).getPosition());
+                if (getDistance(selectedUnitPosition, unitAreaPosition) <= range) {
+                    enemyUnits.add(i);
+                    if(unitsList.get(i).getHp() < lowestHpRecorded){
+                        indexUnitWithLowestHp = i;
+                    }
+                }
+            }
+        }
+
+        if(indexUnitWithLowestHp != -1) {
+            Unit selectedUnitToAttack = owner.getUnitsList().get(enemyUnits.get(indexUnitWithLowestHp));
+            System.out.println("Bot is attacking: " + selectedUnitToAttack.getName() + " fac is :" + selectedUnitToAttack.getFaction());
+
+            selectedUnitToAttack.setHp(selectedUnitToAttack.getHp() - actionUnit.getDamage() + selectedUnitToAttack.getUnitCellDefenseStars());
+
+            actionUnit.setAvailable(false);
+            owner.setViewCandidate(player);
+            player.setCurrentState(ICWarsPlayer.PlayState.NORMAL);
+            enemyUnits.clear();
+        }else{
+            //we didn't find any unit to attack
+            owner.setViewCandidate(player);
+            player.setCurrentState(ICWarsPlayer.PlayState.NORMAL);
+        }
+    }
 
     private double getDistance(DiscreteCoordinates p1, DiscreteCoordinates p2){
         return Math.sqrt((p2.y - p1.y) * (p2.y - p1.y) + (p2.x - p1.x) * (p2.x - p1.x));

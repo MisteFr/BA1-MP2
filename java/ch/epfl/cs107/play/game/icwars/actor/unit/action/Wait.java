@@ -34,4 +34,9 @@ public class Wait extends Action {
         actionUnit.setAvailable(false);
         player.setCurrentState(ICWarsPlayer.PlayState.NORMAL);
     }
+
+    @Override
+    public void doAutoAction(float dt, ICWarsPlayer player) {
+
+    }
 }

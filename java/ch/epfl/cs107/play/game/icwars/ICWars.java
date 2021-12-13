@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.icwars;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
+import ch.epfl.cs107.play.game.icwars.actor.players.AIPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Tank;
@@ -189,14 +190,15 @@ public class ICWars extends AreaGame {
         Soldat enemySoldier = new Soldat(area, new DiscreteCoordinates(9, 5), ICWarsActor.ICWarsFactionType.ENEMY);
 
         RealPlayer player1 = new RealPlayer(area, defaultCursorPosition, ICWarsActor.ICWarsFactionType.ALLY, allyTank, allySoldier);
-        RealPlayer player2 = new RealPlayer(area, defaultEnemyPosition, ICWarsActor.ICWarsFactionType.ENEMY, enemyTank, enemySoldier);
+        //RealPlayer player2 = new RealPlayer(area, defaultEnemyPosition, ICWarsActor.ICWarsFactionType.ENEMY, enemyTank, enemySoldier);
+        AIPlayer player2 = new AIPlayer(area, defaultEnemyPosition, ICWarsActor.ICWarsFactionType.ENEMY, enemyTank, enemySoldier);
         playersList.clear();
         playersList.add(player1);
         playersList.add(player2);
 
 
         for (ICWarsPlayer player : playersList) {
-            ((RealPlayer) player).enterArea(area);
+            player.enterArea(area);
             currentTurnWaitingPlayers.add(player);
         }
     }
