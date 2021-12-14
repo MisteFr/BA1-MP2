@@ -187,7 +187,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     @Override
     public boolean takeCellSpace() {
-        return false;
+        return true;
     }
 
     @Override

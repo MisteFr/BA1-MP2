@@ -73,9 +73,10 @@ public class RealPlayer extends ICWarsPlayer {
 
                 if (keyboard.get(Keyboard.ENTER).isReleased()){
                     if (selectedUnit.isAvailable()){
-                        selectedUnit.changePosition(new DiscreteCoordinates(getPosition()));
-                        selectedUnit.setAvailable(false);
-                        setCurrentState(PlayState.ACTION_SELECTION);
+                        if(selectedUnit.changePosition(new DiscreteCoordinates(getPosition()))){
+                            selectedUnit.setAvailable(false);
+                            setCurrentState(PlayState.ACTION_SELECTION);
+                        }
                     }
                 } else if (keyboard.get(Keyboard.TAB).isReleased()){
                     setCurrentState(PlayState.NORMAL);
