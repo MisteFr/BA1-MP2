@@ -11,7 +11,7 @@ public abstract class Action implements Graphics {
     protected Unit actionUnit;
     protected ICWarsArea owner;
 
-    public Action(Unit unit, ICWarsArea owner){
+    public Action(Unit unit, ICWarsArea owner) {
         this.actionUnit = unit;
         this.owner = owner;
     }

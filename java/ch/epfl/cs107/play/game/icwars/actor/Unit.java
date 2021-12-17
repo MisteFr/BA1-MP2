@@ -2,8 +2,6 @@ package ch.epfl.cs107.play.game.icwars.actor;
 
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
-import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
-import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsBehavior;
@@ -18,24 +16,24 @@ import java.util.List;
 import java.util.Queue;
 
 public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisitor, Interactor {
-    protected boolean isAvailable;
-    protected boolean isAlive;
-    protected int hp;
-    protected int moveRadius;
-    protected int defenseStars;
-    protected LinkedList<Action> actionsList = new LinkedList<>();
+
+    private int hp;
+    private Sprite sprite;
+    private int defenseStars;
+    private boolean isAvailable;
+
+    private final int moveRadius;
     private final ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
 
     private Sprite sprite;
     protected ICWarsRange range;
+    protected boolean soundNeedToBePlayed;
 
-    public Unit(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, int mvRadius, int dmg, int hp){
+    public Unit(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, int mvRadius, int dmg, int hp) {
         super(owner, coordinates, factionType);
-        isAvailable = true;
-        isAlive = true;
-        if(factionType == ICWarsFactionType.ALLY){
+        if (factionType == ICWarsFactionType.ALLY) {
             sprite = new Sprite("icwars/friendly" + getName(), 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
-        }else if (factionType == ICWarsFactionType.ENEMY){
+        } else if (factionType == ICWarsFactionType.ENEMY) {
             sprite = new Sprite("icwars/enemy" + getName(), 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
         }
 
@@ -62,7 +60,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     /**
      * @param amount (int): new amount of hp to set to
      */
-    public void setHp(int amount){
+    public void setHp(int amount) {
         hp = Math.max(amount, 0);
     }
 
@@ -81,7 +79,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     }
 
     /**
-     * @return (LinkedList<Action>): the action list of the unit.
+     * @return (LinkedList < Action >): the action list of the unit.
      */
     public LinkedList<Action> getActionsList() {
         return actionsList;
@@ -92,9 +90,9 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
      */
     public void setAvailable(boolean available) {
         isAvailable = available;
-        if(available){
+        if (available) {
             sprite.setAlpha(1.f);
-        }else{
+        } else {
             sprite.setAlpha(0.5f);
         }
     }
@@ -109,20 +107,21 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     /**
      * @param amount (int): amount of health points to add
      */
-    public void heal(int amount){
-        if (amount > 0){
+    public void heal(int amount) {
+        if (amount > 0) {
             this.hp += amount;
         }
     }
 
     /**
      * Change the unit position to the one specified
+     *
      * @param newPosition new unit's position
      * @return true if the move was successful, false otherwise
      */
     @Override
     public boolean changePosition(DiscreteCoordinates newPosition) {
-        if (!range.nodeExists(newPosition) || !super.changePosition(newPosition)){
+        if (!range.nodeExists(newPosition) || !super.changePosition(newPosition)) {
             return false;
         }
 
@@ -134,7 +133,8 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     /**
      * Draw the unit's range and a path from the unit position to
-     destination
+     * destination
+     *
      * @param destination path destination * @param canvas canvas
      */
     public void drawRangeAndPathTo(DiscreteCoordinates destination, Canvas canvas) {
@@ -149,11 +149,11 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     /**
      * Function to initialise the node network according to a position and a radius
      */
-    private void setRange(int moveRadius, DiscreteCoordinates coordinates){
+    private void setRange(int moveRadius, DiscreteCoordinates coordinates) {
         range = new ICWarsRange();
-        for(int x = (-moveRadius + coordinates.x); x <= (moveRadius + coordinates.x); x++){
-            for(int y = (-moveRadius + coordinates.y); y <= (moveRadius + coordinates.y); y++){
-                if(x >= 0 && y >= 0 && x <  getOwnerArea().getWidth() && y < getOwnerArea().getHeight()){
+        for (int x = (-moveRadius + coordinates.x); x <= (moveRadius + coordinates.x); x++) {
+            for (int y = (-moveRadius + coordinates.y); y <= (moveRadius + coordinates.y); y++) {
+                if (x >= 0 && y >= 0 && x < getOwnerArea().getWidth() && y < getOwnerArea().getHeight()) {
 
                     boolean hasLeftEdge = (x - coordinates.x) > -moveRadius && x > 0;
                     boolean hasRightEdge = (x - coordinates.x) < moveRadius && x < (getOwnerArea().getWidth() - 1);
@@ -164,10 +164,6 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
                 }
             }
         }
-    }
-
-    public ICWarsRange getRange(){
-        return range;
     }
 
     @Override
@@ -207,7 +203,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
-        ((ICWarsInteractionVisitor)v).interactWith(this);
+        ((ICWarsInteractionVisitor) v).interactWith(this);
     }
 
     @Override

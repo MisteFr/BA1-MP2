@@ -36,6 +36,7 @@ public class AIPlayer extends ICWarsPlayer {
             case NORMAL:
                 setCurrentState(PlayState.SELECT_CELL);
                 break;
+
             case SELECT_CELL:
                 //move to nearest unit and select it
                 boolean foundUnitAvailable = false;
@@ -56,6 +57,7 @@ public class AIPlayer extends ICWarsPlayer {
                     setCurrentState(PlayState.IDLE);
                 }
                 break;
+
             case MOVE_UNIT:
                 if (waitFor(WAIT_DURATION, deltaTime)) {
                     ICWarsArea area = (ICWarsArea) getOwnerArea();
@@ -71,14 +73,12 @@ public class AIPlayer extends ICWarsPlayer {
                             DiscreteCoordinates opponentUnitPosition = new DiscreteCoordinates(areaUnits.get(i).getPosition());
 
                             if (getDistance(selectedUnitPosition, opponentUnitPosition) <= moveRadius) {
-                                System.out.println("enemy unit in range.");
                                 if (selectedUnit.changePosition(opponentUnitPosition)) {
                                     changePosition(opponentUnitPosition);
                                     centerCamera();
                                     selectedUnit.setAvailable(false);
                                 }
                             } else {
-                                System.out.println("enemy unit not in range, moving towards.");
                                 int x = opponentUnitPosition.x;
                                 int y = opponentUnitPosition.y;
                                 if (Math.abs(opponentUnitPosition.x - selectedUnitPosition.x) > moveRadius) {
@@ -112,6 +112,7 @@ public class AIPlayer extends ICWarsPlayer {
                                 selectedUnit.changePosition(newTeleportPosition);
                                 selectedUnit.setAvailable(false);
                             }
+
 
                             setCurrentState(PlayState.ACTION_SELECTION);
                             break;
@@ -163,6 +164,13 @@ public class AIPlayer extends ICWarsPlayer {
         return false;
     }
 
+    /**
+     * Return the distance between two points p1 and p2
+     *
+     * @param p1 first point
+     * @param p2 second point
+     * @return distance between the two point p1 and p2
+     */
     private double getDistance(DiscreteCoordinates p1, DiscreteCoordinates p2) {
         return Math.sqrt((p2.y - p1.y) * (p2.y - p1.y) + (p2.x - p1.x) * (p2.x - p1.x));
     }

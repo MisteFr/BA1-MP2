@@ -1,6 +1,6 @@
 package ch.epfl.cs107.play.game.icwars.actor.players;
 
-import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
@@ -11,6 +11,7 @@ import ch.epfl.cs107.play.game.icwars.area.ICWarsBehavior;
 import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.window.Audio;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
@@ -25,10 +26,10 @@ public class RealPlayer extends ICWarsPlayer {
 
     public RealPlayer(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
         super(owner, coordinates, factionType, units);
-        if(factionType == ICWarsFactionType.ALLY){
-            sprite = new Sprite("icwars/allyCursor", 1.f, 1.f,this);
-        }else if (factionType == ICWarsFactionType.ENEMY){
-            sprite = new Sprite("icwars/enemyCursor", 1.f, 1.f,this);
+        if (factionType == ICWarsFactionType.ALLY) {
+            sprite = new Sprite("icwars/allyCursor", 1.f, 1.f, this);
+        } else if (factionType == ICWarsFactionType.ENEMY) {
+            sprite = new Sprite("icwars/enemyCursor", 1.f, 1.f, this);
         }
 
         gui = new ICWarsPlayerGUI(10f, this);
@@ -39,83 +40,83 @@ public class RealPlayer extends ICWarsPlayer {
         super.update(deltaTime);
         Keyboard keyboard = getOwnerArea().getKeyboard();
 
-        switch(getCurrentState()){
+        switch (getCurrentState()) {
             case NORMAL:
-
                 moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
                 moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
                 moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
-                if (keyboard.get(Keyboard.ENTER).isReleased()){
+                if (keyboard.get(Keyboard.ENTER).isReleased()) {
                     setCurrentState(PlayState.SELECT_CELL);
-                } else if (keyboard.get(Keyboard.TAB).isReleased()){
+                } else if (keyboard.get(Keyboard.TAB).isReleased()) {
                     setCurrentState(PlayState.IDLE);
                 }
                 break;
-            case SELECT_CELL:
 
+            case SELECT_CELL:
                 moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
                 moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
                 moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
-                if (selectedUnit != null && selectedUnit.isAvailable()){
+                if (selectedUnit != null && selectedUnit.isAvailable()) {
                     setCurrentState(PlayState.MOVE_UNIT);
                 }
                 break;
-            case MOVE_UNIT:
 
+            case MOVE_UNIT:
                 moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
                 moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
                 moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
                 moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
-                if (keyboard.get(Keyboard.ENTER).isReleased()){
-                    if (selectedUnit.isAvailable()){
-                        if(selectedUnit.changePosition(new DiscreteCoordinates(getPosition()))){
+                if (keyboard.get(Keyboard.ENTER).isReleased()) {
+                    if (selectedUnit.isAvailable()) {
+                        if (selectedUnit.changePosition(new DiscreteCoordinates(getPosition()))) {
                             selectedUnit.setAvailable(false);
                             setCurrentState(PlayState.ACTION_SELECTION);
                         }
                     }
-                } else if (keyboard.get(Keyboard.TAB).isReleased()){
+                } else if (keyboard.get(Keyboard.TAB).isReleased()) {
                     setCurrentState(PlayState.NORMAL);
                 }
                 break;
+
             case ACTION_SELECTION:
-                for(Action act: selectedUnit.getActionsList()){
-                    if (keyboard.get(act.getKey()).isDown()){
+                for (Action act : selectedUnit.getActionsList()) {
+                    if (keyboard.get(act.getKey()).isDown()) {
                         currentAction = act;
                         setCurrentState(PlayState.ACTION);
                     }
                 }
                 break;
+
             case ACTION:
                 currentAction.doAction(deltaTime, this, keyboard);
                 break;
         }
     }
+
     /**
      * Orientate and Move this player in the given orientation if the given button is down
+     *
      * @param orientation (Orientation): given orientation, not null
-     * @param b (Button): button corresponding to the given orientation, not null
+     * @param b           (Button): button corresponding to the given orientation, not null
      */
-    private void moveIfPressed(Orientation orientation, ch.epfl.cs107.play.window.Button b){
-        if(b.isDown()) {
+    private void moveIfPressed(Orientation orientation, ch.epfl.cs107.play.window.Button b) {
+        if (b.isDown()) {
             if (!isDisplacementOccurs()) {
                 orientate(orientation);
                 move(MOVE_DURATION);
-                //gui.setCell();
             }
         }
     }
 
-
-
     /**
      * Leave an area by unregister this player
      */
-    public void leaveArea(){
+    public void leaveArea() {
         getOwnerArea().unregisterActor(this);
     }
 
@@ -130,11 +131,11 @@ public class RealPlayer extends ICWarsPlayer {
 
     @Override
     public void draw(Canvas canvas) {
-        if(getCurrentState() != PlayState.IDLE){
+        if (getCurrentState() != PlayState.IDLE) {
             sprite.draw(canvas);
             gui.draw(canvas);
         }
-        if(getCurrentState() == PlayState.ACTION){
+        if (getCurrentState() == PlayState.ACTION) {
             currentAction.draw(canvas);
         }
     }

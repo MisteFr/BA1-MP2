@@ -9,31 +9,23 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class ICWarsActor extends MovableAreaEntity {
-    private ICWarsFactionType faction;
+    private final ICWarsFactionType faction;
 
-    public enum ICWarsFactionType{
+    public enum ICWarsFactionType {
         NONE(0),
         ALLY(1),
-        ENEMY(2),;
+        ENEMY(2),
+        ;
 
         final int type;
 
-        ICWarsFactionType(int type){
+        ICWarsFactionType(int type) {
             this.type = type;
-        }
-
-        public static ICWarsActor.ICWarsFactionType toType(int type){
-            for(ICWarsActor.ICWarsFactionType ict : ICWarsActor.ICWarsFactionType.values()){
-                if(ict.type == type){
-                    return ict;
-                }
-            }
-            return NONE;
         }
     }
 
 
-    public ICWarsActor(Area owner, DiscreteCoordinates coordinates, ICWarsFactionType faction){
+    public ICWarsActor(Area owner, DiscreteCoordinates coordinates, ICWarsFactionType faction) {
         super(owner, Orientation.UP, coordinates);
         this.faction = faction;
     }
@@ -41,19 +33,18 @@ public abstract class ICWarsActor extends MovableAreaEntity {
     /**
      * Leave an area by unregister this player
      */
-    public void leaveArea(){
+    public void leaveArea() {
         getOwnerArea().unregisterActor(this);
     }
 
     /**
-     *
      * @param area (Area): initial area, not null
-     * @param position (DiscreteCoordinates): initial position, not null
      */
-    public void enterArea(Area area, DiscreteCoordinates position){
+    public void enterArea(Area area) {
         area.registerActor(this);
+        area.setViewCandidate(this);
         setOwnerArea(area);
-        setCurrentPosition(position.toVector());
+        resetMotion();
     }
 
     @Override

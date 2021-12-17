@@ -1,6 +1,5 @@
 package ch.epfl.cs107.play.game.icwars.actor.players;
 
-import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Interactor;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
@@ -19,11 +18,11 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     protected List<Unit> unitsList = new LinkedList<>();
 
 
-    ICWarsPlayer(ICWarsArea area, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units){
+    ICWarsPlayer(ICWarsArea area, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
         super(area, coordinates, factionType);
         setCurrentState(PlayState.IDLE);
 
-        for(Unit unit : units){
+        for (Unit unit : units) {
             area.addUnit(unit);
             unitsList.add(unit);
         }
@@ -38,8 +37,8 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         super.update(deltaTime);
         ICWarsArea area = (ICWarsArea) getOwnerArea();
 
-        for(int i = 0; i < area.getUnitsList().size(); i++){
-            if(area.getUnitsList().get(i).getHp() == 0){
+        for (int i = 0; i < area.getUnitsList().size(); i++) {
+            if (area.getUnitsList().get(i).getHp() == 0) {
                 unitsList.remove(area.getUnitsList().get(i));
                 area.removeUnit(area.getUnitsList().get(i));
             }
@@ -49,7 +48,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     @Override
     public void leaveArea() {
         ICWarsArea area = (ICWarsArea) getOwnerArea();
-        for(Unit unit: unitsList){
+        for (Unit unit : unitsList) {
             area.removeUnit(unit);
         }
         unitsList.clear();
@@ -59,6 +58,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
 
     /**
      * Return whether the player is defeated or not
+     *
      * @return (boolean)
      */
     public boolean isDefeated() {
@@ -68,28 +68,18 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     /**
      * Called when player turn starts
      */
-    public void startTurn(){
+    public void startTurn() {
         setCurrentState(PlayState.NORMAL);
-        for (Unit unit : unitsList){
+        for (Unit unit : unitsList) {
             unit.setAvailable(true);
         }
         centerCamera();
     }
 
-    /**
-     * @param area (Area): initial area, not null
-     */
-    public void enterArea(Area area){
-        area.registerActor(this);
-        area.setViewCandidate(this);
-        setOwnerArea(area);
-        resetMotion();
-    }
-
     @Override
     public void onLeaving(List<DiscreteCoordinates> coordinates) {
         super.onLeaving(coordinates);
-        if (getCurrentState() == PlayState.SELECT_CELL){
+        if (getCurrentState() == PlayState.SELECT_CELL) {
             setCurrentState(PlayState.NORMAL);
         }
     }
@@ -104,15 +94,16 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     /**
      * Get the current PlayState of the player
      */
-    public PlayState getCurrentState(){
+    public PlayState getCurrentState() {
         return currentState;
     }
 
     /**
      * Set the current PlayState of the player
+     *
      * @param state (PlayState): new state
      */
-    public void setCurrentState(PlayState state){
+    public void setCurrentState(PlayState state) {
         System.out.println("New state is " + state);
         currentState = state;
     }
@@ -156,7 +147,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     }
 
     @Override
-    public void acceptInteraction(AreaInteractionVisitor visitor){
+    public void acceptInteraction(AreaInteractionVisitor visitor) {
         ((ICWarsInteractionVisitor) visitor).interactWith(this);
     }
 }

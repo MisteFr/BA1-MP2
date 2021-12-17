@@ -40,14 +40,26 @@ public class ICWarsPlayerGUI implements Graphics {
         }
     }
 
+    /**
+     * Set the unit selected by the player
+     * @param selectedUnit
+     */
     public void setSelectedUnit(Unit selectedUnit) {
         this.selectedUnit = selectedUnit;
     }
 
+    /**
+     * Set the hovered unit the player is currently on for the info panel
+     * @param hoveredUnit
+     */
     public void setHoveredUnit(Unit hoveredUnit) {
         infoPanel.setUnit(hoveredUnit);
     }
 
+    /**
+     * Set the cell the player is currently on
+     * @param cellType
+     */
     public void setCell(ICWarsBehavior.ICWarsCellType cellType) {
         infoPanel.setCurrentCell(cellType);
     }

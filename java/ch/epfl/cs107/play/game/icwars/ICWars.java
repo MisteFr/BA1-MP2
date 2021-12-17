@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Tank;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Soldat;
+import ch.epfl.cs107.play.game.icwars.area.GameOver;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.Level0;
 import ch.epfl.cs107.play.game.icwars.area.Level1;
@@ -22,13 +23,9 @@ public class ICWars extends AreaGame {
 
     private GameState currentState;
     private final String[] areas = {"icwars/Level0", "icwars/Level1"};
-
-    private LinkedList<ICWarsPlayer> playersList = new LinkedList<>();
-    private LinkedList<ICWarsPlayer> currentTurnWaitingPlayers = new LinkedList<>();
-    private LinkedList<ICWarsPlayer> nextTurnWaitingPlayers = new LinkedList<>();
-    private ICWarsPlayer currentPlayer;
-
-    private int areaIndex;
+    private final LinkedList<ICWarsPlayer> playersList = new LinkedList<>();
+    private final LinkedList<ICWarsPlayer> currentTurnWaitingPlayers = new LinkedList<>();
+    private final LinkedList<ICWarsPlayer> nextTurnWaitingPlayers = new LinkedList<>();
 
     public enum GameState {
         INIT, CHOOSE_PLAYER, START_PLAYER_TURN, PLAYER_TURN, END_PLAYER_TURN, END_TURN, END
@@ -40,13 +37,11 @@ public class ICWars extends AreaGame {
 
         switch (currentState) {
             case INIT:
-                System.out.println("state is INIT");
                 startGame(areaIndex);
                 currentState = GameState.CHOOSE_PLAYER;
                 break;
 
             case CHOOSE_PLAYER:
-                System.out.println("state is CHOOSE PLAYER");
                 if (currentTurnWaitingPlayers.isEmpty()) {
                     currentState = GameState.END_TURN;
                 } else {
@@ -57,20 +52,17 @@ public class ICWars extends AreaGame {
                 break;
 
             case START_PLAYER_TURN:
-                System.out.println("state is START PLAYER TURN");
                 currentPlayer.startTurn();
                 currentState = GameState.PLAYER_TURN;
                 break;
 
             case PLAYER_TURN:
-                //System.out.println("state is PLAYER TURN");
                 if (currentPlayer.getCurrentState() == ICWarsPlayer.PlayState.IDLE) {
                     currentState = GameState.END_PLAYER_TURN;
                 }
                 break;
 
             case END_PLAYER_TURN:
-                System.out.println("state is END PLAYER TURN");
                 if (currentPlayer.isDefeated()) {
                     currentPlayer.leaveArea();
                     playersList.remove(currentPlayer);
@@ -84,7 +76,6 @@ public class ICWars extends AreaGame {
                 break;
 
             case END_TURN:
-                System.out.println("state is END TURN");
                 for (ICWarsPlayer player : playersList) {
                     if (player.isDefeated()) {
                         if (nextTurnWaitingPlayers.contains(player)) {
@@ -156,6 +147,7 @@ public class ICWars extends AreaGame {
     private void createAreas() {
         addArea(new Level0());
         addArea(new Level1());
+        addArea(new GameOver());
     }
 
     /**
@@ -206,6 +198,7 @@ public class ICWars extends AreaGame {
 
     public void end() {
         System.out.println("Game Over");
+        setCurrentArea("icwars/GameOver", true);
     }
 
     public String getTitle() {

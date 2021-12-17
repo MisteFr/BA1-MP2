@@ -19,8 +19,8 @@ public class ICWarsInfoPanel implements Graphics {
 
     private final float fontSize;
 
-    private ICWarsBehavior.ICWarsCellType cellType;
     private Unit unit;
+    private ICWarsBehavior.ICWarsCellType cellType;
 
     // Sprite and text graphics line
     private final ShapeGraphics cellDetailsBackground, unitDetailsBackground;
