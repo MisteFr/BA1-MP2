@@ -21,7 +21,11 @@ import java.util.LinkedList;
 
 public class ICWars extends AreaGame {
 
+    private int areaIndex;
+
     private GameState currentState;
+    private ICWarsPlayer currentPlayer;
+
     private final String[] areas = {"icwars/Level0", "icwars/Level1"};
     private final LinkedList<ICWarsPlayer> playersList = new LinkedList<>();
     private final LinkedList<ICWarsPlayer> currentTurnWaitingPlayers = new LinkedList<>();

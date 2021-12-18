@@ -25,7 +25,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     private final int moveRadius;
     private final ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
 
-    private Sprite sprite;
+    protected LinkedList<Action> actionsList = new LinkedList<>();
     protected ICWarsRange range;
     protected boolean soundNeedToBePlayed;
 
