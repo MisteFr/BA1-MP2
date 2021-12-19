@@ -29,7 +29,7 @@ public class Soldat extends Unit {
     @Override
     public void dealDamage(Unit enemy) {
         soundNeedToBePlayed = true;
-        enemy.setHp(enemy.getHp() - this.getDamage() + this.getUnitCellDefenseStars());
+        enemy.setHp(Math.min(enemy.getHp() , enemy.getHp() - this.getDamage() + enemy.getUnitCellDefenseStars()));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Soldat extends Unit {
     @Override
     public void bip(Audio audio) {
         super.bip(audio);
-        if(soundNeedToBePlayed == true){
+        if(soundNeedToBePlayed){
             try{
                 SoundAcoustics s = new SoundAcoustics("sounds/soldier_shoot.wav");
                 s.shouldBeStarted();
