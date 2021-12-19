@@ -72,7 +72,7 @@ public class AIPlayer extends ICWarsPlayer {
                             foundEnemyUnits = true;
                             DiscreteCoordinates opponentUnitPosition = new DiscreteCoordinates(areaUnits.get(i).getPosition());
 
-                            if (getDistance(selectedUnitPosition, opponentUnitPosition) <= moveRadius) {
+                            if (ICWarsArea.getDistance(selectedUnitPosition, opponentUnitPosition) <= moveRadius) {
                                 if (selectedUnit.changePosition(opponentUnitPosition)) {
                                     changePosition(opponentUnitPosition);
                                     centerCamera();
@@ -162,17 +162,6 @@ public class AIPlayer extends ICWarsPlayer {
             counting = true;
         }
         return false;
-    }
-
-    /**
-     * Return the distance between two points p1 and p2
-     *
-     * @param p1 first point
-     * @param p2 second point
-     * @return distance between the two point p1 and p2
-     */
-    private double getDistance(DiscreteCoordinates p1, DiscreteCoordinates p2) {
-        return Math.sqrt((p2.y - p1.y) * (p2.y - p1.y) + (p2.x - p1.x) * (p2.x - p1.x));
     }
 
     @Override

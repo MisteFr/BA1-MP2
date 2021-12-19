@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.icwars.actor;
 
+import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
@@ -9,6 +10,7 @@ import ch.epfl.cs107.play.game.icwars.area.ICWarsRange;
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
+import ch.epfl.cs107.play.window.Audio;
 import ch.epfl.cs107.play.window.Canvas;
 
 import java.util.LinkedList;
@@ -27,7 +29,8 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     protected LinkedList<Action> actionsList = new LinkedList<>();
     protected ICWarsRange range;
-    protected boolean soundNeedToBePlayed;
+    protected boolean playShootSound;
+    protected boolean playMoveSound;
 
     public Unit(ICWarsArea owner, DiscreteCoordinates coordinates, ICWarsFactionType factionType, int mvRadius, int dmg, int hp) {
         super(owner, coordinates, factionType);
@@ -40,6 +43,32 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
         moveRadius = mvRadius;
         setRange(moveRadius, coordinates);
     }
+
+    @Override
+    public void bip(Audio audio) {
+        super.bip(audio);
+            if(playShootSound){
+                try{
+                    SoundAcoustics s = new SoundAcoustics("sounds/" + getName() + "_shoot.wav");
+                    s.shouldBeStarted();
+                    s.bip(audio);
+                }catch (Exception e){
+                    System.out.println("Something went wrong while playing the sound - " + e.getMessage());
+                }
+                playShootSound = false;
+            }
+            if(playMoveSound){
+                try{
+                    SoundAcoustics s = new SoundAcoustics("sounds/pop.wav");
+                    s.shouldBeStarted();
+                    s.bip(audio);
+                }catch (Exception e){
+                    System.out.println("Something went wrong while playing the sound - " + e.getMessage());
+                }
+                playMoveSound = false;
+            }
+        }
+
 
     public abstract String getName();
 
@@ -127,6 +156,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
         //update the range.
         setRange(moveRadius, getCurrentMainCellCoordinates());
+        playMoveSound = true;
 
         return true;
     }

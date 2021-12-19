@@ -8,14 +8,13 @@ import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Tank;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Soldat;
-import ch.epfl.cs107.play.game.icwars.area.GameOver;
-import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
-import ch.epfl.cs107.play.game.icwars.area.Level0;
-import ch.epfl.cs107.play.game.icwars.area.Level1;
+import ch.epfl.cs107.play.game.icwars.area.*;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Keyboard;
+import ch.epfl.cs107.play.window.Sound;
 import ch.epfl.cs107.play.window.Window;
+import ch.epfl.cs107.play.window.swing.SwingWindow;
 
 import java.util.LinkedList;
 
@@ -32,7 +31,7 @@ public class ICWars extends AreaGame {
     private final LinkedList<ICWarsPlayer> nextTurnWaitingPlayers = new LinkedList<>();
 
     public enum GameState {
-        INIT, CHOOSE_PLAYER, START_PLAYER_TURN, PLAYER_TURN, END_PLAYER_TURN, END_TURN, END
+        INIT, CHOOSE_PLAYER, START_PLAYER_TURN, PLAYER_TURN, END_PLAYER_TURN, END_TURN, END, GAME_OVER
     }
 
     @Override
@@ -124,6 +123,13 @@ public class ICWars extends AreaGame {
         if (keyboard.get(Keyboard.R).isReleased()) {
             areaIndex = 0;
             resetGame();
+            playSound("soundtrack", true, true, 0.5f);
+        }
+
+        if (keyboard.get(Keyboard.P).isReleased()) {
+            ICWarsPauseMenu pauseMenu = new ICWarsPauseMenu();
+            pauseMenu.setOwner(getCurrentArea());
+            getCurrentArea().requestAreaPause(pauseMenu);
         }
 
         /* //commented based on the instructions from the assignment
@@ -168,13 +174,14 @@ public class ICWars extends AreaGame {
         if (super.begin(window, fileSystem)) {
             createAreas();
             startGame(areaIndex);
+            playSound("soundtrack", true, true,0.5f);
             currentState = GameState.CHOOSE_PLAYER;
             return true;
         }
         return false;
     }
 
-    private void initArea(String areaKey) {
+    private void initArea(String areaKey){
         ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
         DiscreteCoordinates defaultCursorPosition = area.getDefaultCursorPosition();
         DiscreteCoordinates defaultEnemyPosition = area.getEnemySpawnPosition();
@@ -199,10 +206,24 @@ public class ICWars extends AreaGame {
         }
     }
 
+    public void playSound(String name, boolean doLoop, boolean fadeIn, float soundLevel){
+        try{
+            SwingWindow windowS = (SwingWindow) getWindow();
+            Sound soundToPlay = windowS.getSound("sounds/" + name + ".wav");
+            windowS.playSound(soundToPlay, false, soundLevel ,fadeIn, doLoop, true);
+        }catch (Exception e){
+            System.out.println("Something went wrong while playing the sound - " + e.getMessage());
+            //retry for some reasons it doesn't work directly sometimes (needs two or three retries).
+            playSound(name, doLoop, fadeIn, soundLevel);
+        }
+    }
+
 
     public void end() {
         System.out.println("Game Over");
         setCurrentArea("icwars/GameOver", true);
+        playSound("gameover", false, false,1f);
+        currentState = GameState.GAME_OVER;
     }
 
     public String getTitle() {

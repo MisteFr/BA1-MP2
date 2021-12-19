@@ -56,7 +56,7 @@ public class Attack extends Action {
         for(int i = 0; i < unitsList.size(); ++i){
             if(unitsList.get(i).getFaction() != actionUnit.getFaction()) {
                 DiscreteCoordinates unitAreaPosition = new DiscreteCoordinates(unitsList.get(i).getPosition());
-                if (getDistance(selectedUnitPosition, unitAreaPosition) <= range) {
+                if (ICWarsArea.getDistance(selectedUnitPosition, unitAreaPosition) <= range) {
                     enemyUnits.add(i);
                 }
             }
@@ -110,7 +110,7 @@ public class Attack extends Action {
         for(int i = 0; i < unitsList.size(); ++i){
             if(unitsList.get(i).getFaction() != actionUnit.getFaction()) {
                 DiscreteCoordinates unitAreaPosition = new DiscreteCoordinates(unitsList.get(i).getPosition());
-                if (getDistance(selectedUnitPosition, unitAreaPosition) <= range) {
+                if (ICWarsArea.getDistance(selectedUnitPosition, unitAreaPosition) <= range) {
                     enemyUnits.add(i);
                     if(unitsList.get(i).getHp() < lowestHpRecorded){
                         indexUnitWithLowestHp = i;
@@ -133,16 +133,5 @@ public class Attack extends Action {
             owner.setViewCandidate(player);
             player.setCurrentState(ICWarsPlayer.PlayState.NORMAL);
         }
-    }
-
-    /**
-     * Return the distance between two points p1 and p2
-     *
-     * @param p1 first point
-     * @param p2 second point
-     * @return distance between the two point p1 and p2
-     */
-    private double getDistance(DiscreteCoordinates p1, DiscreteCoordinates p2){
-        return Math.sqrt((p2.y - p1.y) * (p2.y - p1.y) + (p2.x - p1.x) * (p2.x - p1.x));
     }
 }
