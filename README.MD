@@ -5,6 +5,11 @@
 
 This project is an adaptation of the game called "Advanced Wars" ([Wikipedia page](https://fr.wikipedia.org/wiki/Advance_Wars))
 
+## Nota Bene
+
+As the total size of the archive was too big, we had to submit our ressources folder the switchtube drive under the name
+"324366-344200-ressources.zip", as asked by Ms Sam.
+
 ## How to play the game
 
 ### Start
