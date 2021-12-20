@@ -7,7 +7,6 @@ import ch.epfl.cs107.play.game.icwars.area.ICWarsBehavior;
 
 public interface ICWarsInteractionVisitor extends AreaInteractionVisitor {
 
-
     default void interactWith(ICWarsPlayer player){
         //Interaction is not doing anything
     }

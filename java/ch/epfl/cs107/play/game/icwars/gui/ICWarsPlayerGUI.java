@@ -3,18 +3,16 @@ package ch.epfl.cs107.play.game.icwars.gui;
 import ch.epfl.cs107.play.game.actor.Graphics;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
-import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsBehavior;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class ICWarsPlayerGUI implements Graphics {
 
-    private ICWarsPlayer player;
+    private final ICWarsPlayer player;
     private Unit selectedUnit;
-    private ICWarsBehavior.ICWarsCellType cellType;
-    private ICWarsActionsPanel actionPanel;
-    private ICWarsInfoPanel infoPanel;
+    private final ICWarsActionsPanel actionPanel;
+    private final ICWarsInfoPanel infoPanel;
 
     protected static final float FONT_SIZE = 20.f;
 
@@ -42,7 +40,7 @@ public class ICWarsPlayerGUI implements Graphics {
 
     /**
      * Set the unit selected by the player
-     * @param selectedUnit
+     * @param selectedUnit selected unit by the player
      */
     public void setSelectedUnit(Unit selectedUnit) {
         this.selectedUnit = selectedUnit;
@@ -50,7 +48,7 @@ public class ICWarsPlayerGUI implements Graphics {
 
     /**
      * Set the hovered unit the player is currently on for the info panel
-     * @param hoveredUnit
+     * @param hoveredUnit hovered unit
      */
     public void setHoveredUnit(Unit hoveredUnit) {
         infoPanel.setUnit(hoveredUnit);
@@ -58,7 +56,7 @@ public class ICWarsPlayerGUI implements Graphics {
 
     /**
      * Set the cell the player is currently on
-     * @param cellType
+     * @param cellType type of the cell (ICWarsCellType)
      */
     public void setCell(ICWarsBehavior.ICWarsCellType cellType) {
         infoPanel.setCurrentCell(cellType);

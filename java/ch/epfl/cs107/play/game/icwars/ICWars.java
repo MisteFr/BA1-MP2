@@ -39,7 +39,7 @@ public class ICWars extends AreaGame {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
+        
         switch (currentState) {
             case INIT:
                 startGame(areaIndex);
@@ -51,6 +51,7 @@ public class ICWars extends AreaGame {
                     currentState = GameState.END_TURN;
                 } else {
                     currentPlayer = currentTurnWaitingPlayers.getFirst();
+                    currentPlayer.endTurn();
                     currentTurnWaitingPlayers.remove(currentPlayer);
                     currentState = GameState.START_PLAYER_TURN;
                 }

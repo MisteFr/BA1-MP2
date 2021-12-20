@@ -93,6 +93,13 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         centerCamera();
     }
 
+    /**
+     * Called when player turn ends
+     */
+    public void endTurn() {
+        selectedUnit = null;
+    }
+
     @Override
     public void onLeaving(List<DiscreteCoordinates> coordinates) {
         super.onLeaving(coordinates);

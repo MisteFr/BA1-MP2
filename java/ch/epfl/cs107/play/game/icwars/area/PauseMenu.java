@@ -27,6 +27,6 @@ public class PauseMenu extends ICWarsArea{
 
     @Override
     public DiscreteCoordinates getEnemySpawnPosition() {
-        return null;
+        return new DiscreteCoordinates(0, 0);
     }
 }
