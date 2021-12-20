@@ -16,6 +16,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     protected PlayState currentState;
     protected Unit selectedUnit = null;
     protected List<Unit> unitsList = new LinkedList<>();
+    private PlayState previousState;
 
 
     ICWarsPlayer(ICWarsArea area, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
@@ -29,7 +30,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     }
 
     public enum PlayState {
-        IDLE, NORMAL, SELECT_CELL, MOVE_UNIT, ACTION_SELECTION, ACTION
+        IDLE, NORMAL, SELECT_CELL, MOVE_UNIT, ACTION_SELECTION, ACTION, PAUSED
     }
 
     @Override
@@ -43,6 +44,22 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
                 area.removeUnit(area.getUnitsList().get(i));
             }
         }
+    }
+
+    /**
+     * Pause the player and switch it to state NORMAL
+     * We save the previous state too.
+     */
+    public void pause(){
+        previousState = getCurrentState();
+        setCurrentState(PlayState.PAUSED);
+    }
+
+    /**
+     * Resumt the player and switch it back to its last state before pausing
+     */
+    public void resume(){
+        setCurrentState(previousState);
     }
 
     @Override

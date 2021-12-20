@@ -25,6 +25,8 @@ public class ICWars extends AreaGame {
     private GameState currentState;
     private ICWarsPlayer currentPlayer;
 
+    private boolean isPaused = false;
+
     private final String[] areas = {"icwars/Level0", "icwars/Level1"};
     private final LinkedList<ICWarsPlayer> playersList = new LinkedList<>();
     private final LinkedList<ICWarsPlayer> currentTurnWaitingPlayers = new LinkedList<>();
@@ -56,6 +58,7 @@ public class ICWars extends AreaGame {
 
             case START_PLAYER_TURN:
                 currentPlayer.startTurn();
+                playSound("pop2", false, false, false, 1f);
                 currentState = GameState.PLAYER_TURN;
                 break;
 
@@ -111,7 +114,7 @@ public class ICWars extends AreaGame {
 
         Keyboard keyboard = getCurrentArea().getKeyboard();
 
-        if (keyboard.get(Keyboard.N).isReleased()) {
+        if (keyboard.get(Keyboard.N).isReleased() && !isPaused()) {
             if ((areaIndex + 1) < areas.length) {
                 ++areaIndex;
                 resetGame();
@@ -120,16 +123,18 @@ public class ICWars extends AreaGame {
             }
         }
 
-        if (keyboard.get(Keyboard.R).isReleased()) {
+        if (keyboard.get(Keyboard.R).isReleased() && !isPaused()) {
             areaIndex = 0;
             resetGame();
-            playSound("soundtrack", true, true, 0.5f);
+            playSound("soundtrack", true, true, true, 0.5f);
         }
 
         if (keyboard.get(Keyboard.P).isReleased()) {
-            ICWarsPauseMenu pauseMenu = new ICWarsPauseMenu();
-            pauseMenu.setOwner(getCurrentArea());
-            getCurrentArea().requestAreaPause(pauseMenu);
+            if(isPaused()){
+                requestResume();
+            }else{
+                requestPause();
+            }
         }
 
         /* //commented based on the instructions from the assignment
@@ -158,6 +163,7 @@ public class ICWars extends AreaGame {
         addArea(new Level0());
         addArea(new Level1());
         addArea(new GameOver());
+        addArea(new PauseMenu());
     }
 
     /**
@@ -174,7 +180,7 @@ public class ICWars extends AreaGame {
         if (super.begin(window, fileSystem)) {
             createAreas();
             startGame(areaIndex);
-            playSound("soundtrack", true, true,0.5f);
+            playSound("soundtrack", true, true,true, 0.5f);
             currentState = GameState.CHOOSE_PLAYER;
             return true;
         }
@@ -206,24 +212,49 @@ public class ICWars extends AreaGame {
         }
     }
 
-    public void playSound(String name, boolean doLoop, boolean fadeIn, float soundLevel){
+    public void playSound(String name, boolean doLoop, boolean fadeIn, boolean shouldStopOther, float soundLevel){
         try{
             SwingWindow windowS = (SwingWindow) getWindow();
             Sound soundToPlay = windowS.getSound("sounds/" + name + ".wav");
-            windowS.playSound(soundToPlay, false, soundLevel ,fadeIn, doLoop, true);
+            windowS.playSound(soundToPlay, false, soundLevel ,fadeIn, doLoop, shouldStopOther);
         }catch (Exception e){
             System.out.println("Something went wrong while playing the sound - " + e.getMessage());
             //retry for some reasons it doesn't work directly sometimes (needs two or three retries).
-            playSound(name, doLoop, fadeIn, soundLevel);
+            playSound(name, doLoop, fadeIn, shouldStopOther, soundLevel);
         }
     }
 
+    @Override
+    public void requestPause() {
+        super.requestPause();
+
+        currentPlayer.pause();
+        setCurrentArea("icwars/PauseMenu", true);
+
+        isPaused = true;
+    }
+
+    @Override
+    public void requestResume() {
+        super.requestResume();
+
+        currentPlayer.resume();
+        setCurrentArea(areas[areaIndex], false);
+
+        isPaused = false;
+    }
 
     public void end() {
         System.out.println("Game Over");
         setCurrentArea("icwars/GameOver", true);
-        playSound("gameover", false, false,1f);
+        playSound("gameover", false, false, true, 1f);
         currentState = GameState.GAME_OVER;
+    }
+
+
+    @Override
+    public boolean isPaused() {
+        return super.isPaused() || isPaused;
     }
 
     public String getTitle() {
