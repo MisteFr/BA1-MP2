@@ -7,8 +7,8 @@ This project is an adaptation of the game called "Advanced Wars" ([Wikipedia pag
 
 ## Nota Bene
 
-As the total size of the archive was too big, we had to submit our ressources folder the switchtube drive under the name
-"324366-344200-ressources.zip", as asked by Ms Sam.
+As the total size of the archive (mainly because of our additions in the /res folder) was too big, we had to submit our 
+ressources folder to the switchtube drive under the name "324366-344200-ressources.zip", as asked by Mrs Sam.
 
 ## How to play the game
 
@@ -46,6 +46,7 @@ prompted with the **GAME OVER** screen.
 During any state of the game, there are specific hotkeys you can press :
  - R : restarts the game from the beginning (at level 0 with all units spawned).
  - N : skips to the next level. If the current level was the last one, prompts the **GAME OVER** screen.
+ - P : Pauses the game. Once the game is paused, press P again to unpause it.
 
 
 ## Extensions
