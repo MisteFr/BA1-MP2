@@ -86,7 +86,6 @@ public abstract class ICWarsArea extends Area {
      *
      * @param p1 first point
      * @param p2 second point
-     * @param range
      * @return if p2 is in the range of 1
      */
     public static boolean isInRange(DiscreteCoordinates p1, DiscreteCoordinates p2, int range){

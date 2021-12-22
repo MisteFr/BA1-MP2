@@ -54,8 +54,7 @@ public abstract class ICWarsActor extends MovableAreaEntity {
     }
 
     /**
-     * Set the faction
-     * @param factionType
+     * Sets the faction
      */
     public void setFaction(ICWarsFactionType factionType) {
         faction = factionType;
@@ -63,7 +62,7 @@ public abstract class ICWarsActor extends MovableAreaEntity {
 
     /**
      * Get the faction
-     * @return
+     * @return ICWarsFactionType
      */
     public ICWarsFactionType getFaction() {
         return faction;

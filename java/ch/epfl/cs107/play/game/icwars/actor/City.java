@@ -92,7 +92,7 @@ public class City extends ICWarsActor implements Interactor {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
-        ((ICWarsInteractionVisitor) v).interactWith(this);
+        v.interactWith(this);
     }
 
     @Override

@@ -97,13 +97,6 @@ public class ICWars extends AreaGame {
                         player.leaveArea();
                         PLAYERS.remove(player);
                     }
-
-                    List<Unit> playerUnitList = player.getUnitsList();
-                    for(Unit u : playerUnitList){
-                        if(u.getUnitCellType() == ICWarsBehavior.ICWarsCellType.CITY){
-
-                        }
-                    }
                 }
                 if (PLAYERS.size() <= 1) {
                     currentState = GameState.END;

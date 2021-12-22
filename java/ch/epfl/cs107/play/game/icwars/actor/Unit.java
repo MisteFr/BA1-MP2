@@ -21,7 +21,7 @@ import java.util.Queue;
 public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisitor, Interactor {
 
     private int hp;
-    private int maxHp;
+    private final int maxHp;
     private Sprite sprite;
     private int defenseStars;
     private ICWarsBehavior.ICWarsCellType currentCellType;
@@ -128,7 +128,6 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     /**
      * Add an action to the unit
-     * @return void
      */
     public void addAction(Action a) {
         actionsList.add(a);
@@ -136,7 +135,6 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     /**
      * Add an action to the unit
-     * @return void
      */
     public void removeAction(Action a) {
         actionsList.remove(a);
