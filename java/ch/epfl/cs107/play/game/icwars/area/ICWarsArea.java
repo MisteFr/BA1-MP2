@@ -1,6 +1,7 @@
 package ch.epfl.cs107.play.game.icwars.area;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.icwars.actor.City;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -11,7 +12,9 @@ import java.util.List;
 
 public abstract class ICWarsArea extends Area {
 
-    private final List<Unit> unitsList = new LinkedList<>();
+    private final List<Unit> UNITS_LIST = new LinkedList<>();
+    private final List<City> CITIES_LIST = new LinkedList<>();
+    private final static int CITY_HEALING_AMOUNT = 2;
 
     public static final float SCALE_FACTOR = 10.f; //Set to a higher value to see more of the Area
 
@@ -27,7 +30,16 @@ public abstract class ICWarsArea extends Area {
      */
     public void addUnit(Unit unit){
         registerActor(unit);
-        unitsList.add(unit);
+        UNITS_LIST.add(unit);
+    }
+
+    /**
+     * @param city
+     * Add a city to the area and to the unitsList.
+     */
+    public void addCity(City city){
+        registerActor(city);
+        CITIES_LIST.add(city);
     }
 
     /**
@@ -36,32 +48,49 @@ public abstract class ICWarsArea extends Area {
      */
     public void removeUnit(Unit unit){
         unregisterActor(unit);
-        unitsList.remove(unit);
+        UNITS_LIST.remove(unit);
     }
 
     /**
      * @return List<Unit>
      */
     public List<Unit> getUnitsList(){
-        return unitsList;
+        return UNITS_LIST;
     }
 
     /**
      * Reset the area
      */
     public void resetArea(){
-        unitsList.clear();
+        UNITS_LIST.clear();
     }
 
     /**
-     * Return the distance between two points p1 and p2
+     * Heals units that are on a friendly city at the end of a turn.
+     */
+    public void healUnits(){
+        for(City c: CITIES_LIST){
+            DiscreteCoordinates cPos = new DiscreteCoordinates(c.getPosition());
+            for(Unit u: getUnitsList()){
+                DiscreteCoordinates unitPos = new DiscreteCoordinates(u.getPosition());
+
+                if(u.getFaction() != c.getFaction() && cPos.equals(unitPos)){
+                    u.heal(CITY_HEALING_AMOUNT);
+                }
+            }
+        }
+    }
+
+    /**
+     * Return if an entity is in the range of another one
      *
      * @param p1 first point
      * @param p2 second point
-     * @return distance between the two point p1 and p2
+     * @param range
+     * @return if p2 is in the range of 1
      */
-    public static double getDistance(DiscreteCoordinates p1, DiscreteCoordinates p2){
-        return Math.sqrt((p2.y - p1.y) * (p2.y - p1.y) + (p2.x - p1.x) * (p2.x - p1.x));
+    public static boolean isInRange(DiscreteCoordinates p1, DiscreteCoordinates p2, int range){
+            return ((Math.abs(p2.x - p1.x) <= range) && (Math.abs(p2.y - p1.y) <= range));
     }
 
     @Override

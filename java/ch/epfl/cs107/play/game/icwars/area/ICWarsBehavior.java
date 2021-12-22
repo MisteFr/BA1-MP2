@@ -1,5 +1,6 @@
 package ch.epfl.cs107.play.game.icwars.area;
 
+import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaBehavior;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
@@ -17,24 +18,24 @@ public class ICWarsBehavior extends AreaBehavior {
         MOUNTAIN(-256, 4),
         CITY(-1, 2),;
 
-        final int type;
-        final int numberDefenseStars;
+        final int TYPE;
+        final int DEFENSE_STARS;
 
         ICWarsCellType(int type, int numberDefenseStars){
-            this.type = type;
-            this.numberDefenseStars = numberDefenseStars;
+            this.TYPE = type;
+            this.DEFENSE_STARS = numberDefenseStars;
         }
 
         public static ICWarsBehavior.ICWarsCellType toType(int type){
             for(ICWarsBehavior.ICWarsCellType ict : ICWarsBehavior.ICWarsCellType.values()){
-                if(ict.type == type)
+                if(ict.TYPE == type)
                     return ict;
             }
             return NONE;
         }
 
         public int getDefenseStar() {
-            return numberDefenseStars;
+            return DEFENSE_STARS;
         }
 
         public String typeToString(){

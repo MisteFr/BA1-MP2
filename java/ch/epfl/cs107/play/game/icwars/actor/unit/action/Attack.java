@@ -17,10 +17,10 @@ public class Attack extends Action {
     private final static String NAME = "(A)ttack";
     private final static int KEY = Keyboard.A;
 
-    private final LinkedList<Integer> enemyUnits = new LinkedList<>();
-    private int indexUnitToAttack = 0;
-    private final ImageGraphics cursor = new ImageGraphics(ResourcePath.getSprite("icwars/UIpackSheet"), 1f, 1f,
+    private final List<Integer> ENEMY_UNITS = new LinkedList<>();
+    private final ImageGraphics CURSOR = new ImageGraphics(ResourcePath.getSprite("icwars/UIpackSheet"), 1f, 1f,
             new RegionOfInterest(4*18, 26*18, 16, 16));
+    private int indexUnitToAttack = 0;
 
     public Attack(Unit unit, ICWarsArea owner) {
         super(unit, owner);
@@ -38,10 +38,10 @@ public class Attack extends Action {
 
     @Override
     public void draw(Canvas canvas) {
-        if(!enemyUnits.isEmpty()){
-            owner.setViewCandidate(owner.getUnitsList().get(enemyUnits.get(indexUnitToAttack)));
-            cursor.setAnchor(canvas.getPosition().add(1,0));
-            cursor.draw(canvas);
+        if(!ENEMY_UNITS.isEmpty()){
+            owner.setViewCandidate(owner.getUnitsList().get(ENEMY_UNITS.get(indexUnitToAttack)));
+            CURSOR.setAnchor(canvas.getPosition().add(1,0));
+            CURSOR.draw(canvas);
         }
 
     }
@@ -52,31 +52,31 @@ public class Attack extends Action {
         DiscreteCoordinates selectedUnitPosition = new DiscreteCoordinates(actionUnit.getPosition());
         List<Unit> unitsList = owner.getUnitsList();
 
-        enemyUnits.clear();
+        ENEMY_UNITS.clear();
         for(int i = 0; i < unitsList.size(); ++i){
             if(unitsList.get(i).getFaction() != actionUnit.getFaction()) {
                 DiscreteCoordinates unitAreaPosition = new DiscreteCoordinates(unitsList.get(i).getPosition());
-                if (ICWarsArea.getDistance(selectedUnitPosition, unitAreaPosition) <= range) {
-                    enemyUnits.add(i);
+                if (ICWarsArea.isInRange(selectedUnitPosition, unitAreaPosition, range)) {
+                    ENEMY_UNITS.add(i);
                 }
             }
         }
 
-        if(!enemyUnits.isEmpty()){
+        if(!ENEMY_UNITS.isEmpty()){
             if(keyboard.get(Keyboard.LEFT).isReleased()){
                 if((indexUnitToAttack - 1) >= 0){
                     --indexUnitToAttack;
                 }else{
-                    indexUnitToAttack = (enemyUnits.size() - 1);
+                    indexUnitToAttack = (ENEMY_UNITS.size() - 1);
                 }
             } else if (keyboard.get(Keyboard.RIGHT).isReleased()) {
-                if(indexUnitToAttack  < (enemyUnits.size() - 1)){
+                if(indexUnitToAttack  < (ENEMY_UNITS.size() - 1)){
                     ++indexUnitToAttack;
                 }else{
                     indexUnitToAttack = 0;
                 }
             } else if (keyboard.get(Keyboard.ENTER).isReleased()) {
-                Unit selectedUnitToAttack = owner.getUnitsList().get(enemyUnits.get(indexUnitToAttack));
+                Unit selectedUnitToAttack = owner.getUnitsList().get(ENEMY_UNITS.get(indexUnitToAttack));
 
                 actionUnit.dealDamage(selectedUnitToAttack);
                 actionUnit.setAvailable(false);
@@ -84,7 +84,7 @@ public class Attack extends Action {
                 player.setCurrentState(ICWarsPlayer.PlayState.NORMAL);
 
                 //reset
-                enemyUnits.clear();
+                ENEMY_UNITS.clear();
                 indexUnitToAttack = 0;
             }
         }else{
@@ -106,12 +106,12 @@ public class Attack extends Action {
 
         int indexUnitWithLowestHp = -1;
         int lowestHpRecorded = Integer.MAX_VALUE;
-        enemyUnits.clear();
+        ENEMY_UNITS.clear();
         for(int i = 0; i < unitsList.size(); ++i){
             if(unitsList.get(i).getFaction() != actionUnit.getFaction()) {
                 DiscreteCoordinates unitAreaPosition = new DiscreteCoordinates(unitsList.get(i).getPosition());
-                if (ICWarsArea.getDistance(selectedUnitPosition, unitAreaPosition) <= range) {
-                    enemyUnits.add(i);
+                if (ICWarsArea.isInRange(selectedUnitPosition, unitAreaPosition, range)) {
+                    ENEMY_UNITS.add(i);
                     if(unitsList.get(i).getHp() < lowestHpRecorded){
                         indexUnitWithLowestHp = i;
                     }
@@ -127,7 +127,7 @@ public class Attack extends Action {
             owner.setViewCandidate(player);
             player.setCurrentState(ICWarsPlayer.PlayState.NORMAL);
 
-            enemyUnits.clear();
+            ENEMY_UNITS.clear();
         }else{
             //we didn't find any unit to attack
             owner.setViewCandidate(player);

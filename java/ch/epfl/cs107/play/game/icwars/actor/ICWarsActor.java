@@ -9,12 +9,13 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class ICWarsActor extends MovableAreaEntity {
-    private final ICWarsFactionType faction;
+    private final ICWarsFactionType FACTION;
 
     public enum ICWarsFactionType {
         NONE(0),
         ALLY(1),
         ENEMY(2),
+        NEUTRAL(3)
         ;
 
         final int type;
@@ -27,7 +28,7 @@ public abstract class ICWarsActor extends MovableAreaEntity {
 
     public ICWarsActor(Area owner, DiscreteCoordinates coordinates, ICWarsFactionType faction) {
         super(owner, Orientation.UP, coordinates);
-        this.faction = faction;
+        this.FACTION = faction;
     }
 
     /**
@@ -53,6 +54,6 @@ public abstract class ICWarsActor extends MovableAreaEntity {
     }
 
     public ICWarsFactionType getFaction() {
-        return faction;
+        return FACTION;
     }
 }

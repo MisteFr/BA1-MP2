@@ -17,7 +17,7 @@ import java.awt.*;
 
 public class ICWarsInfoPanel implements Graphics {
 
-    private final float fontSize;
+    private final float FONT_SIZE;
 
     private Unit unit;
     private ICWarsBehavior.ICWarsCellType cellType;
@@ -35,7 +35,7 @@ public class ICWarsInfoPanel implements Graphics {
         final float height = cameraScaleFactor/4;
         final float width = cameraScaleFactor/8;
 
-        fontSize = cameraScaleFactor/ICWarsPlayerGUI.FONT_SIZE;
+        FONT_SIZE = cameraScaleFactor/ICWarsPlayerGUI.FONT_SIZE;
 
         Shape rect = new Polygon(0,0, 0,height, width,height, width,0);
         cellDetailsBackground = new ShapeGraphics(rect, Color.DARK_GRAY, Color.BLACK, 0f, .8f, 3000f);
@@ -49,25 +49,25 @@ public class ICWarsInfoPanel implements Graphics {
         roadSprite = new ImageGraphics(ResourcePath.getSprite("icwars/road"), 1f, 1f, null, anchor, 1f, 3001f);
         riverSprite = new ImageGraphics(ResourcePath.getSprite("icwars/river"), 1f, 1f, null, anchor, 1f, 3001f);
 
-        cellTypeText = new TextGraphics("", fontSize, Color.WHITE, null, 0.0f,
+        cellTypeText = new TextGraphics("", FONT_SIZE, Color.WHITE, null, 0.0f,
                 false, false, new Vector(0, -0.3f),
                 TextAlign.Horizontal.LEFT, TextAlign.Vertical.MIDDLE, 1.0f, 3001f);
 
-        cellDefenseText = new TextGraphics("", fontSize, Color.WHITE, null, 0.0f,
-                false, false, new Vector(0, -2.5f*fontSize-0.7f),
+        cellDefenseText = new TextGraphics("", FONT_SIZE, Color.WHITE, null, 0.0f,
+                false, false, new Vector(0, -2.5f* FONT_SIZE -0.7f),
                 TextAlign.Horizontal.LEFT, TextAlign.Vertical.MIDDLE, 1.0f, 3001f);
 
 
-        unitNameText = new TextGraphics("", fontSize, Color.WHITE, null, 0.0f,
+        unitNameText = new TextGraphics("", FONT_SIZE, Color.WHITE, null, 0.0f,
                 false, false, new Vector(0, -0.3f),
                 TextAlign.Horizontal.LEFT, TextAlign.Vertical.MIDDLE, 1.0f, 3001f);
 
-        unitHealthText = new TextGraphics("", fontSize, Color.WHITE, null, 0.0f,
-                false, false, new Vector(0, -1.25f*fontSize-0.5f),
+        unitHealthText = new TextGraphics("", FONT_SIZE, Color.WHITE, null, 0.0f,
+                false, false, new Vector(0, -1.25f* FONT_SIZE -0.5f),
                 TextAlign.Horizontal.LEFT, TextAlign.Vertical.MIDDLE, 1.0f, 3001f);
 
-        unitDamageText = new TextGraphics("", fontSize, Color.WHITE, null, 0.0f,
-                false, false, new Vector(0, -2.5f*fontSize-0.4f),
+        unitDamageText = new TextGraphics("", FONT_SIZE, Color.WHITE, null, 0.0f,
+                false, false, new Vector(0, -2.5f* FONT_SIZE -0.4f),
                 TextAlign.Horizontal.LEFT, TextAlign.Vertical.MIDDLE, 1.0f, 3001f);
     }
 

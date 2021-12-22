@@ -72,7 +72,7 @@ public class AIPlayer extends ICWarsPlayer {
                             foundEnemyUnits = true;
                             DiscreteCoordinates opponentUnitPosition = new DiscreteCoordinates(areaUnits.get(i).getPosition());
 
-                            if (ICWarsArea.getDistance(selectedUnitPosition, opponentUnitPosition) <= moveRadius) {
+                            if (ICWarsArea.isInRange(selectedUnitPosition, opponentUnitPosition, (int) moveRadius)) {
                                 if (selectedUnit.changePosition(opponentUnitPosition)) {
                                     changePosition(opponentUnitPosition);
                                     centerCamera();

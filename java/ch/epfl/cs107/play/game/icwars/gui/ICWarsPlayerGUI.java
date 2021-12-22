@@ -9,32 +9,32 @@ import ch.epfl.cs107.play.window.Canvas;
 
 public class ICWarsPlayerGUI implements Graphics {
 
-    private final ICWarsPlayer player;
+    private final ICWarsPlayer PLAYER;
     private Unit selectedUnit;
-    private final ICWarsActionsPanel actionPanel;
-    private final ICWarsInfoPanel infoPanel;
+    private final ICWarsActionsPanel ACTION_PANEL;
+    private final ICWarsInfoPanel INFO_PANEL;
 
     protected static final float FONT_SIZE = 20.f;
 
     public ICWarsPlayerGUI(float cameraScaleFactor, ICWarsPlayer player){
-        this.player = player;
-        this.actionPanel = new ICWarsActionsPanel(cameraScaleFactor);
-        this.infoPanel = new ICWarsInfoPanel(cameraScaleFactor);
+        this.PLAYER = player;
+        this.ACTION_PANEL = new ICWarsActionsPanel(cameraScaleFactor);
+        this.INFO_PANEL = new ICWarsInfoPanel(cameraScaleFactor);
     }
 
     @Override
     public void draw(Canvas canvas) {
         if(selectedUnit != null){
-            if(player.getCurrentState() == ICWarsPlayer.PlayState.MOVE_UNIT){
-                selectedUnit.drawRangeAndPathTo(new DiscreteCoordinates(player.getPosition()), canvas);
+            if(PLAYER.getCurrentState() == ICWarsPlayer.PlayState.MOVE_UNIT){
+                selectedUnit.drawRangeAndPathTo(new DiscreteCoordinates(PLAYER.getPosition()), canvas);
             }
-            if(player.getCurrentState() == ICWarsPlayer.PlayState.ACTION_SELECTION) {
-                actionPanel.setActions(selectedUnit.getActionsList());
-                actionPanel.draw(canvas);
+            if(PLAYER.getCurrentState() == ICWarsPlayer.PlayState.ACTION_SELECTION) {
+                ACTION_PANEL.setActions(selectedUnit.getActionsList());
+                ACTION_PANEL.draw(canvas);
             }
         }
-        if(player.getCurrentState() == ICWarsPlayer.PlayState.NORMAL || player.getCurrentState() == ICWarsPlayer.PlayState.SELECT_CELL) {
-            infoPanel.draw(canvas);
+        if(PLAYER.getCurrentState() == ICWarsPlayer.PlayState.NORMAL || PLAYER.getCurrentState() == ICWarsPlayer.PlayState.SELECT_CELL) {
+            INFO_PANEL.draw(canvas);
         }
     }
 
@@ -51,7 +51,7 @@ public class ICWarsPlayerGUI implements Graphics {
      * @param hoveredUnit hovered unit
      */
     public void setHoveredUnit(Unit hoveredUnit) {
-        infoPanel.setUnit(hoveredUnit);
+        INFO_PANEL.setUnit(hoveredUnit);
     }
 
     /**
@@ -59,6 +59,6 @@ public class ICWarsPlayerGUI implements Graphics {
      * @param cellType type of the cell (ICWarsCellType)
      */
     public void setCell(ICWarsBehavior.ICWarsCellType cellType) {
-        infoPanel.setCurrentCell(cellType);
+        INFO_PANEL.setCurrentCell(cellType);
     }
 }

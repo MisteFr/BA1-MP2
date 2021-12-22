@@ -13,10 +13,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
-    protected PlayState currentState;
+    private PlayState currentState;
+    private PlayState previousState;
     protected Unit selectedUnit = null;
     protected List<Unit> unitsList = new LinkedList<>();
-    private PlayState previousState;
 
 
     ICWarsPlayer(ICWarsArea area, DiscreteCoordinates coordinates, ICWarsFactionType factionType, Unit... units) {
@@ -91,6 +91,15 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
             unit.setAvailable(true);
         }
         centerCamera();
+    }
+
+    public boolean unitsAvailableRemaining() {
+        for (Unit unit : unitsList) {
+            if(unit.isAvailable()){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

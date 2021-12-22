@@ -17,8 +17,8 @@ import java.util.List;
 
 public class RealPlayer extends ICWarsPlayer {
     private final static int MOVE_DURATION = 8;
-    private final ICWarsPlayerGUI gui;
-    private final ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
+    private final ICWarsPlayerGUI GUI;
+    private final ICWarsInteractionHandler HANDLER = new ICWarsInteractionHandler();
     private Sprite sprite;
     private Action currentAction;
 
@@ -30,7 +30,7 @@ public class RealPlayer extends ICWarsPlayer {
             sprite = new Sprite("icwars/enemyCursor", 1.f, 1.f, this);
         }
 
-        gui = new ICWarsPlayerGUI(10f, this);
+        GUI = new ICWarsPlayerGUI(10f, this);
     }
 
     @Override
@@ -73,7 +73,13 @@ public class RealPlayer extends ICWarsPlayer {
                     if (selectedUnit.isAvailable()) {
                         if (selectedUnit.changePosition(new DiscreteCoordinates(getPosition()))) {
                             selectedUnit.setAvailable(false);
-                            setCurrentState(PlayState.ACTION_SELECTION);
+
+                            if(unitsAvailableRemaining()){
+                                setCurrentState(PlayState.ACTION_SELECTION);
+                            }else{
+                                //no units available remaining, turn is finished
+                                setCurrentState(PlayState.IDLE);
+                            }
                         }
                     }
                 } else if (keyboard.get(Keyboard.TAB).isReleased()) {
@@ -131,7 +137,7 @@ public class RealPlayer extends ICWarsPlayer {
     public void draw(Canvas canvas) {
         if (getCurrentState() != PlayState.IDLE) {
             sprite.draw(canvas);
-            gui.draw(canvas);
+            GUI.draw(canvas);
         }
         if (getCurrentState() == PlayState.ACTION) {
             currentAction.draw(canvas);
@@ -141,7 +147,7 @@ public class RealPlayer extends ICWarsPlayer {
     @Override
     public void onLeaving(List<DiscreteCoordinates> coordinates) {
         super.onLeaving(coordinates);
-        gui.setHoveredUnit(null);
+        GUI.setHoveredUnit(null);
     }
 
     @Override
@@ -162,7 +168,7 @@ public class RealPlayer extends ICWarsPlayer {
     @Override
     public void interactWith(Interactable other) {
         if (!isDisplacementOccurs()) {
-            other.acceptInteraction(handler);
+            other.acceptInteraction(HANDLER);
         }
     }
 
@@ -171,14 +177,14 @@ public class RealPlayer extends ICWarsPlayer {
         public void interactWith(Unit unit) {
             if (getCurrentState() == PlayState.SELECT_CELL && (unit.getFaction() == getFaction()) && selectedUnit != unit) {
                 selectedUnit = unit;
-                gui.setSelectedUnit(unit);
+                GUI.setSelectedUnit(unit);
             }
 
-            gui.setHoveredUnit(unit);
+            GUI.setHoveredUnit(unit);
         }
 
         public void interactWith(ICWarsBehavior.ICWarsCell cell) {
-            gui.setCell(cell.getType());
+            GUI.setCell(cell.getType());
         }
     }
 }

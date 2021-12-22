@@ -1,6 +1,8 @@
 package ch.epfl.cs107.play.game.icwars.area;
 
 import ch.epfl.cs107.play.game.areagame.actor.Background;
+import ch.epfl.cs107.play.game.icwars.actor.City;
+import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
 public class Level1 extends ICWarsArea{
@@ -22,7 +24,14 @@ public class Level1 extends ICWarsArea{
     @Override
     protected void createArea(){
         registerActor(new Background(this));
+
+        City city1 = new City(this, new DiscreteCoordinates(5, 2), ICWarsActor.ICWarsFactionType.NEUTRAL);
+        City city2 = new City(this, new DiscreteCoordinates(10, 8), ICWarsActor.ICWarsFactionType.NEUTRAL);
+
+        addCity(city1);
+        addCity(city2);
     }
+
 
     @Override
     public DiscreteCoordinates getDefaultCursorPosition() {

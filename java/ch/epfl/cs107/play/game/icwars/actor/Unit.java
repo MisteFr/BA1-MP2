@@ -4,6 +4,7 @@ import ch.epfl.cs107.play.game.actor.SoundAcoustics;
 import ch.epfl.cs107.play.game.areagame.actor.*;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
+import ch.epfl.cs107.play.game.icwars.actor.unit.action.Capture;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsBehavior;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsRange;
@@ -20,15 +21,17 @@ import java.util.Queue;
 public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisitor, Interactor {
 
     private int hp;
+    private int maxHp;
     private Sprite sprite;
     private int defenseStars;
+    private ICWarsBehavior.ICWarsCellType currentCellType;
     private boolean isAvailable;
 
-    private final int moveRadius;
-    private final ICWarsInteractionHandler handler = new ICWarsInteractionHandler();
+    private final int MOVE_RADIUS;
+    private ICWarsRange range;
+    private final ICWarsInteractionHandler HANDLER = new ICWarsInteractionHandler();
 
     protected LinkedList<Action> actionsList = new LinkedList<>();
-    protected ICWarsRange range;
     protected boolean playShootSound;
     protected boolean playMoveSound;
 
@@ -40,8 +43,10 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
             sprite = new Sprite("icwars/enemy" + getName(), 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
         }
 
-        moveRadius = mvRadius;
-        setRange(moveRadius, coordinates);
+        MOVE_RADIUS = mvRadius;
+        setRange(MOVE_RADIUS, coordinates);
+
+        maxHp = hp;
     }
 
     @Override
@@ -97,7 +102,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
      * @return (int): the move radius of the unit.
      */
     public int getMoveRadius() {
-        return moveRadius;
+        return MOVE_RADIUS;
     }
 
     /**
@@ -108,10 +113,33 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
     }
 
     /**
+     * @return (int): the defense stars of the cell of the unit.
+     */
+    public ICWarsBehavior.ICWarsCellType getUnitCellType() {
+        return currentCellType;
+    }
+
+    /**
      * @return (LinkedList < Action >): the action list of the unit.
      */
     public LinkedList<Action> getActionsList() {
         return actionsList;
+    }
+
+    /**
+     * Add an action to the unit
+     * @return void
+     */
+    public void addAction(Action a) {
+        actionsList.add(a);
+    }
+
+    /**
+     * Add an action to the unit
+     * @return void
+     */
+    public void removeAction(Action a) {
+        actionsList.remove(a);
     }
 
     /**
@@ -137,7 +165,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
      * @param amount (int): amount of health points to add
      */
     public void heal(int amount) {
-        if (amount > 0) {
+        if (amount > 0 && (getHp() + amount <= maxHp)) {
             this.hp += amount;
         }
     }
@@ -155,7 +183,7 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
         }
 
         //update the range.
-        setRange(moveRadius, getCurrentMainCellCoordinates());
+        setRange(MOVE_RADIUS, getCurrentMainCellCoordinates());
         playMoveSound = true;
 
         return true;
@@ -193,6 +221,15 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
                     range.addNode(new DiscreteCoordinates(x, y), hasLeftEdge, hasUpEdge, hasRightEdge, hasDownEdge);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onLeaving(List<DiscreteCoordinates> coordinates) {
+        super.onLeaving(coordinates);
+        //Capture action is always the latest of the list
+        if(getActionsList().getLast() instanceof Capture){
+            removeAction(getActionsList().getLast());
         }
     }
 
@@ -238,13 +275,14 @@ public abstract class Unit extends ICWarsActor implements ICWarsInteractionVisit
 
     @Override
     public void interactWith(Interactable other) {
-        other.acceptInteraction(handler);
+        other.acceptInteraction(HANDLER);
     }
 
     private class ICWarsInteractionHandler implements ICWarsInteractionVisitor {
         @Override
         public void interactWith(ICWarsBehavior.ICWarsCell cell) {
             defenseStars = cell.getType().getDefenseStar();
+            currentCellType = cell.getType();
         }
     }
 }
