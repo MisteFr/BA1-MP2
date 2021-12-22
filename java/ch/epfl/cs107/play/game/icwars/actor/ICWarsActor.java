@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class ICWarsActor extends MovableAreaEntity {
-    private final ICWarsFactionType FACTION;
+    private ICWarsFactionType faction;
 
     public enum ICWarsFactionType {
         NONE(0),
@@ -28,7 +28,7 @@ public abstract class ICWarsActor extends MovableAreaEntity {
 
     public ICWarsActor(Area owner, DiscreteCoordinates coordinates, ICWarsFactionType faction) {
         super(owner, Orientation.UP, coordinates);
-        this.FACTION = faction;
+        this.faction = faction;
     }
 
     /**
@@ -53,7 +53,19 @@ public abstract class ICWarsActor extends MovableAreaEntity {
         return Collections.singletonList(getCurrentMainCellCoordinates());
     }
 
+    /**
+     * Set the faction
+     * @param factionType
+     */
+    public void setFaction(ICWarsFactionType factionType) {
+        faction = factionType;
+    }
+
+    /**
+     * Get the faction
+     * @return
+     */
     public ICWarsFactionType getFaction() {
-        return FACTION;
+        return faction;
     }
 }

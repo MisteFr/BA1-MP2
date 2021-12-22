@@ -40,6 +40,10 @@ public class RealPlayer extends ICWarsPlayer {
 
         switch (getCurrentState()) {
             case NORMAL:
+                if(!unitsAvailableRemaining()){
+                    //no units available remaining, turn is finished
+                    setCurrentState(PlayState.IDLE);
+                }
                 moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
                 moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
                 moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
@@ -74,12 +78,7 @@ public class RealPlayer extends ICWarsPlayer {
                         if (selectedUnit.changePosition(new DiscreteCoordinates(getPosition()))) {
                             selectedUnit.setAvailable(false);
 
-                            if(unitsAvailableRemaining()){
-                                setCurrentState(PlayState.ACTION_SELECTION);
-                            }else{
-                                //no units available remaining, turn is finished
-                                setCurrentState(PlayState.IDLE);
-                            }
+                            setCurrentState(PlayState.ACTION_SELECTION);
                         }
                     }
                 } else if (keyboard.get(Keyboard.TAB).isReleased()) {

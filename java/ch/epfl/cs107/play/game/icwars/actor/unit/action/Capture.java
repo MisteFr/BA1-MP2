@@ -37,6 +37,7 @@ public class Capture extends Action {
         selectedCity.setFaction(actionUnit.getFaction());
         actionUnit.setAvailable(false);
         player.setCurrentState(ICWarsPlayer.PlayState.NORMAL);
+        actionUnit.removeAction(this);
     }
 
     @Override

@@ -10,6 +10,8 @@ import ch.epfl.cs107.play.game.icwars.actor.unit.Rocket;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Tank;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Soldat;
 import ch.epfl.cs107.play.game.icwars.area.*;
+import ch.epfl.cs107.play.game.icwars.area.menu.GameOver;
+import ch.epfl.cs107.play.game.icwars.area.menu.PauseMenu;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Keyboard;
@@ -229,9 +231,9 @@ public class ICWars extends AreaGame {
 
     public void playSound(String name, boolean doLoop, boolean fadeIn, boolean shouldStopOther, float soundLevel){
         try{
-            SwingWindow windowS = (SwingWindow) getWindow();
-            Sound soundToPlay = windowS.getSound("sounds/" + name + ".wav");
-            windowS.playSound(soundToPlay, false, soundLevel ,fadeIn, doLoop, shouldStopOther);
+            SwingWindow windows = (SwingWindow) getWindow();
+            Sound soundToPlay = windows.getSound("sounds/" + name + ".wav");
+            windows.playSound(soundToPlay, false, soundLevel ,fadeIn, doLoop, shouldStopOther);
         }catch (Exception e){
             System.out.println("Something went wrong while playing the sound - " + e.getMessage());
             //retry for some reasons it doesn't work directly sometimes (needs two or three retries).

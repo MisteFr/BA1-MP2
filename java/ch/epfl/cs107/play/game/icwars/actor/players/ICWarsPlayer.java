@@ -137,7 +137,6 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
      * @param state (PlayState): new state
      */
     public void setCurrentState(PlayState state) {
-        System.out.println("New state is " + state);
         currentState = state;
     }
 

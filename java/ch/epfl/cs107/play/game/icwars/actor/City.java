@@ -18,22 +18,20 @@ public class City extends ICWarsActor implements Interactor {
 
     private int hp = 10;
     private Sprite sprite;
-    private ICWarsFactionType factionType;
     private final ICWarsCityInteractionHandler HANDLER;
 
     public City(Area owner, DiscreteCoordinates coordinates, ICWarsFactionType faction) {
         super(owner, coordinates, faction);
         HANDLER = new ICWarsCityInteractionHandler();
-        factionType = faction;
         updateSprite();
     }
 
     public void updateSprite(){
-        if (factionType == ICWarsFactionType.ALLY) {
+        if (getFaction() == ICWarsFactionType.ALLY) {
             sprite = new Sprite("icwars/friendlyBuilding", 1f, 1f, this, null, new Vector(0f, 0f));
-        } else if (factionType == ICWarsFactionType.ENEMY) {
+        } else if (getFaction() == ICWarsFactionType.ENEMY) {
             sprite = new Sprite("icwars/enemyBuilding", 1f, 1f, this, null, new Vector(0f, 0f));
-        }else if (factionType == ICWarsFactionType.NEUTRAL){
+        }else if (getFaction() == ICWarsFactionType.NEUTRAL){
             sprite = new Sprite("icwars/neutralBuilding", 1f, 1f, this, null, new Vector(0f, 0f));
         }
     }
@@ -53,7 +51,7 @@ public class City extends ICWarsActor implements Interactor {
     }
 
     public void setFaction(ICWarsFactionType factionType){
-        this.factionType = factionType;
+        super.setFaction(factionType);
         this.updateSprite();
     }
 

@@ -1,9 +1,10 @@
-package ch.epfl.cs107.play.game.icwars.area;
+package ch.epfl.cs107.play.game.icwars.area.menu;
 
 import ch.epfl.cs107.play.game.areagame.actor.Background;
+import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-public class GameOver extends ICWarsArea{
+public class GameOver extends ICWarsArea {
 
     @Override
     public float getCameraScaleFactor() {
