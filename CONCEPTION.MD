@@ -1,8 +1,9 @@
-We have adhered to the suggested architecture without significant additions.
+
+We followed the suggested architecture without significant modifications.
 
 ## Extensions
 
-###Menus
+### Menus
 As part of the extensions, we added menus (PauseMenu and GameOverMenu) that are sub-classes of ICWarsArea.
 - For the GameOver menu to work, we added a new GameState GAME_OVER so that end() isn't getting called in a loop when 
 the GameState is END.
@@ -13,17 +14,17 @@ We also added ``pause()`` and ```resume``` in ICWarsPlayer to handle state chang
 
 
 
-###Sounds
+### Sounds
 We also added sounds to the game. We wrote a ```playSound()``` method that uses the getSound and playSound methods of 
 the SwingWindow class to play sounds.
 
-###Cities
+### Cities
 Following the suggested architecture for the realization of the extension of the cities, we added a constant 
 ```CITY_HEALING_AMOUNT = 2;``` in ICWarsArea.
 We also added a new ICWarsFactionType enum type: ```NEUTRAL``` as city can be neutral.
 
 
-###Other
+### Other
 A small feature we added is that after each action performed by a unit, we check if the player has any units left. 
 If they don't have any, we automatically pass the hand to the next player, which makes the game more fluid.  
 
